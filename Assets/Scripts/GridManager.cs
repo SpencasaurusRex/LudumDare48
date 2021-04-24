@@ -36,6 +36,10 @@ public class GridManager : MonoBehaviour {
         throw new System.Exception("Removing from invalid spot");
     }
 
+    public void RemoveGridObjectAt(Vector2Int coord) {
+        Grid.Remove(coord);
+    }
+
     public bool MoveGridObject(GridObject go, Vector2Int newLocation) {
         if (RemoveGridObject(go) && !Grid.ContainsKey(newLocation)) {
             Grid.Add(newLocation, go);

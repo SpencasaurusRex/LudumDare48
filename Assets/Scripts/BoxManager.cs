@@ -35,6 +35,7 @@ public class BoxManager : MonoBehaviour {
 
         while (toProcess.Count > 0) {
             var processBox = toProcess.Dequeue();
+            // if (groups.ContainsKey(processBox)) continue;
             groups.Add(processBox, group);
             processBox.Group = group;
             group.Add(processBox);
@@ -102,7 +103,7 @@ public class BoxManager : MonoBehaviour {
 
                 if (below != null && below.GridType == GridType.Block) {
                     var belowBox = below.GetComponent<Box>();
-                    if (group != belowBox.Group || !belowBox.CanFall) {
+                    if (!belowBox.Wobble && group != belowBox.Group || !belowBox.CanFall) {
                         stable = true;
                     }
                 }

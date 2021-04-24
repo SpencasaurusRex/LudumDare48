@@ -46,7 +46,7 @@ public class Box : MonoBehaviour {
     void Update() {
         if (Wobble) {
             animationT += Time.deltaTime;
-            transform.position = GridObject.Location.WithZ(0).ToFloat() + Vector3.right * WobbleCurve.Evaluate(animationT) + Vector3.up;
+            transform.position = GridObject.Location.WithZ(0).ToFloat() + Vector3.right * WobbleCurve.Evaluate(animationT); // + Vector3.up;
         }
         else {
             animationT = 0;
@@ -77,9 +77,10 @@ public class Box : MonoBehaviour {
 
             Falling = true;
             nextFallCheck = GridObject.Down.y;
-            grid.MoveGridObject(GridObject, GridObject.Down);
-            
+            // grid.AddGridObject(GridObject.Down, GridObject);
             yield return new WaitForSeconds(WobbleAnimationLength);
+            grid.MoveGridObject(GridObject, GridObject.Down);
+            // grid.RemoveGridObjectAt(GridObject.Up);
             Wobble = false;
             animationT = 0;
         }
