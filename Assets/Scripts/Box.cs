@@ -42,28 +42,28 @@ public class Box : MonoBehaviour {
     float nextFallCheck;
 
     public void CalculateGroups() {
-        if (Falling) return;        
-        Group = new Group(this);
+        // if (Falling) return;        
+        // Group = new Group(this);
 
-        int combo = 0;
+        // int combo = 0;
 
-        // Find group
-        Vector2Int[] dirs = new [] {Vector2Int.right, Vector2Int.up, Vector2Int.left, Vector2Int.down};
-        for (int i = 0; i < 4; i++) {
-            var neighborPos = GridObject.Location.Offset(dirs[i]);
-            if (!grid.HasGridObject(neighborPos)) continue;
+        // // Find group
+        // Vector2Int[] dirs = new [] {Vector2Int.right, Vector2Int.up, Vector2Int.left, Vector2Int.down};
+        // for (int i = 0; i < 4; i++) {
+        //     var neighborPos = GridObject.Location.Offset(dirs[i]);
+        //     if (!grid.HasGridObject(neighborPos)) continue;
             
-            var neighbor = grid.GetGridObject(neighborPos);
-            if (neighbor.GridType != GridType.Block) continue;
+        //     var neighbor = grid.GetGridObject(neighborPos);
+        //     if (neighbor.GridType != GridType.Block) continue;
             
-            var box = neighbor.GetComponent<Box>();
-            if (BlockColor == box.BlockColor) {
-                combo += 1 << i;
-                Group.Add(box);
-            }
-        }
+        //     var box = neighbor.GetComponent<Box>();
+        //     if (BlockColor == box.BlockColor) {
+        //         combo += 1 << i;
+        //         Group.Add(box);
+        //     }
+        // }
 
-        sr.sprite = Sprites[combo];        
+        // sr.sprite = Sprites[combo];        
     }
 
     void Update() {

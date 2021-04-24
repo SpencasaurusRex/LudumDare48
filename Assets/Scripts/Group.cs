@@ -8,10 +8,8 @@ public class Group : IEquatable<Group>{
 
     public static int currentId;
 
-    public Group(Box b) {
+    public Group() {
         ID = currentId++;
-        Contained.Add(b);
-        Items.Add(b);
     }
 
     public void Add(Box b) {

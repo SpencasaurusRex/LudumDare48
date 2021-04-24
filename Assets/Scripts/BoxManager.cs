@@ -15,29 +15,75 @@ public class BoxManager : MonoBehaviour {
         else Instance = this;
     }
 
+    Dictionary<Box, Group> groups = new Dictionary<Box, Group>();
+    Vector2Int[] dirs = new [] {Vector2Int.right, Vector2Int.up, Vector2Int.left, Vector2Int.down};
+
+    void Connected(Box block) {
+        if (block.Falling) return;
+        if (groups.ContainsKey(block)){
+            return;
+        }
+
+        List<Box> gos = new List<Box>();
+        HashSet<Box> counted = new HashSet<Box>();
+        Queue<Box> toProcess = new Queue<Box>();
+
+        Group group = new Group();
+
+        counted.Add(block);
+        toProcess.Enqueue(block);
+
+        while (toProcess.Count > 0) {
+            var processBox = toProcess.Dequeue();
+            groups.Add(processBox, group);
+            processBox.Group = group;
+            group.Add(processBox);
+            int combo = 0;
+            for (int i = 0; i < 4; i++) {
+                var neighborPos = processBox.GridObject.Location.Offset(dirs[i]);
+                var neighbor = GridManager.Instance.GetGridObject(neighborPos);
+                if (neighbor != null) {
+                    var neighborBox = neighbor.GetComponent<Box>();
+                    if (!neighborBox.Falling && neighborBox.BlockColor == processBox.BlockColor) {
+                        combo += 1 << i;
+                        if (!counted.Contains(neighborBox)) {
+                            counted.Add(neighborBox);
+                            toProcess.Enqueue(neighborBox);
+                        }
+                    }
+                }
+            }
+            processBox.GetComponent<SpriteRenderer>().sprite = processBox.Sprites[combo];
+        }
+    }
+
     void Update() {
         Stopwatch all = Stopwatch.StartNew();
-        
         Stopwatch calculateGroups = Stopwatch.StartNew();
-        // Calculate groups
-        foreach (var box in Boxes) {
-            box.CalculateGroups();
-        }
-        calculateGroups.Stop();
+        
+        groups.Clear();
 
-        Stopwatch uniqueGroups = Stopwatch.StartNew();
+        // Calculate groups
+        for (int i = 0; i < Boxes.Count; i++) {
+            Connected(Boxes[i]);
+        }
+        
+        calculateGroups.Stop();
+        
+
+        Stopwatch uniqueGroupsSw = Stopwatch.StartNew();
         HashSet<Group> containedGroups = new HashSet<Group>();
-        List<Group> groups = new List<Group>();
+        List<Group> uniqueGroups = new List<Group>();
         foreach (var box in Boxes) {
             if (!containedGroups.Contains(box.Group)) {
                 containedGroups.Add(box.Group);
-                groups.Add(box.Group);
+                uniqueGroups.Add(box.Group);
             }
         }
-        uniqueGroups.Stop();
+        uniqueGroupsSw.Stop();
 
         Stopwatch stability = Stopwatch.StartNew();
-        foreach (var group in groups) {
+        foreach (var group in uniqueGroups) {
             bool stable = false;
             foreach (var box in group.Items) {
                 if (box.Falling || !box.CanFall) {
@@ -68,6 +114,6 @@ public class BoxManager : MonoBehaviour {
         // print("UniqueGroups: " + uniqueGroups.ElapsedMilliseconds);
         // print("Stability: " + stability.ElapsedMilliseconds);
         // print("All: " + all.ElapsedMilliseconds);
-        print(all.ElapsedMilliseconds + " " + calculateGroups.ElapsedMilliseconds + " " + uniqueGroups.ElapsedMilliseconds + " " + stability.ElapsedMilliseconds);
+        print(all.ElapsedMilliseconds + " " + calculateGroups.ElapsedMilliseconds + " " + uniqueGroupsSw.ElapsedMilliseconds + " " + stability.ElapsedMilliseconds);
     }
 }
