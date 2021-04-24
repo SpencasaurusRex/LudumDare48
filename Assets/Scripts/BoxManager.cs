@@ -38,7 +38,7 @@ public class BoxManager : MonoBehaviour {
             groups.Add(processBox, group);
             processBox.Group = group;
             group.Add(processBox);
-            int combo = 0;
+            int combo = (int)processBox.BlockColor * 16;
             for (int i = 0; i < 4; i++) {
                 var neighborPos = processBox.GridObject.Location.Offset(dirs[i]);
                 var neighbor = GridManager.Instance.GetGridObject(neighborPos);
@@ -70,7 +70,6 @@ public class BoxManager : MonoBehaviour {
         
         calculateGroups.Stop();
         
-
         Stopwatch uniqueGroupsSw = Stopwatch.StartNew();
         HashSet<Group> containedGroups = new HashSet<Group>();
         List<Group> uniqueGroups = new List<Group>();
@@ -85,7 +84,16 @@ public class BoxManager : MonoBehaviour {
         Stopwatch stability = Stopwatch.StartNew();
         foreach (var group in uniqueGroups) {
             bool stable = false;
+            bool wobble = false;
+            bool falling = false;
             foreach (var box in group.Items) {
+                if (box.Wobble) {
+                    wobble = true;
+                    break;
+                }
+                if (box.Falling) {
+                    falling = true;
+                }
                 if (box.Falling || !box.CanFall) {
                     stable = true;
                     break;
@@ -99,10 +107,18 @@ public class BoxManager : MonoBehaviour {
                     }
                 }
             }
-            if (!stable) {
+            if (wobble) {
+
+            }
+            else if (!stable && !falling) {
                 var orderedBoxes = group.Items.OrderBy(x => x.GridObject.Location.y).ToList();
                 foreach (var fallingBox in orderedBoxes) {
                     fallingBox.Fall();
+                }
+            }
+            else if (!falling) {
+                foreach (var box in group.Items) {
+                    box.DontFall();
                 }
             }
         }
@@ -110,10 +126,6 @@ public class BoxManager : MonoBehaviour {
 
 
         all.Stop();
-        // print("CalculateGroups: " + calculateGroups.ElapsedMilliseconds);
-        // print("UniqueGroups: " + uniqueGroups.ElapsedMilliseconds);
-        // print("Stability: " + stability.ElapsedMilliseconds);
-        // print("All: " + all.ElapsedMilliseconds);
-        print(all.ElapsedMilliseconds + " " + calculateGroups.ElapsedMilliseconds + " " + uniqueGroupsSw.ElapsedMilliseconds + " " + stability.ElapsedMilliseconds);
+        // print(all.ElapsedMilliseconds + " " + calculateGroups.ElapsedMilliseconds + " " + uniqueGroupsSw.ElapsedMilliseconds + " " + stability.ElapsedMilliseconds);
     }
 }

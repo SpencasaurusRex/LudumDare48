@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour {
     public float MovementSpeed;
     public float DrillInputThreshold = 0.5f;
     public float DrillingTime;
+    public float FallingBlockWalkGap = 0.75f;
+    public float FallingBlockKillGap = 0.3f;
 
     // Runtime
     InputMethod currentInputMethod;
@@ -85,7 +87,6 @@ public class PlayerController : MonoBehaviour {
             grounded = false;
             falling = true;
             nextFallCheck = groundGridPos.y;
-            // grid.MoveGridObject(gridObject, groundGridPos); 
             Location = groundGridPos;
             return;
         }
@@ -93,43 +94,64 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetAxisRaw("Horizontal") < -DrillInputThreshold) { 
             if (grid.HasGridObject(Left)) {
                 // Drill left
-                grid.GetGridObject(Left).GetComponent<Box>().Drill();
-                drilling = true;
+                var box = grid.GetGridObject(Left).GetComponent<Box>();
+                if (!box.Falling) {
+                    grid.GetGridObject(Left).GetComponent<Box>().Drill();
+                    drilling = true;
+                }
+                else if (box.transform.position.y - box.GridObject.Location.y > FallingBlockWalkGap) {
+                    moving = true;
+                    Location = Left;
+                }
             }
             else {
                 // Move left
                 moving = true;
-                // grid.MoveGridObject(gridObject, gridObject.Left);
                 Location = Left;
             }
         }
         else if (Input.GetAxisRaw("Horizontal") > DrillInputThreshold) {
             if (grid.HasGridObject(Right)) {
                 // Drill right
-                grid.GetGridObject(Right).GetComponent<Box>().Drill();
-                drilling = true;
+                var box =  grid.GetGridObject(Right).GetComponent<Box>();
+                if (!box.Falling) {
+                    box.Drill();
+                    drilling = true;
+                } 
+                else if (box.transform.position.y - box.GridObject.Location.y > FallingBlockWalkGap) {
+                    moving = true;
+                    Location = Right;
+                }
             }
             else {
                 // Move right
                 moving = true;
-                // grid.MoveGridObject(gridObject, gridObject.Right);
                 Location = Right;
             }
         }
         else if (Input.GetAxisRaw("Vertical") < -DrillInputThreshold) {
             // Drill down
-            grid.GetGridObject(Down).GetComponent<Box>().Drill();
-            drilling = true;
+            var box = grid.GetGridObject(Down).GetComponent<Box>();
+            if (!box.Falling) {
+                box.Drill();
+                drilling = true;
+            }
         }
 
-        if (grid.HasGridObject(Location)) {
-            // Die
-            print("Die");
+        var fallingGrid = grid.GetGridObject(Location);
+        if (fallingGrid) {
+            var fallingBlock = fallingGrid.GetComponent<Box>();
+            float y = 0;
+            if (fallingBlock.Falling) {
+                y = fallingBlock.transform.position.y - fallingGrid.Location.y;
+            }
+            if (y < FallingBlockKillGap) {
+                print("Die");
+            }
         }
     }
 
     void Update() {
-        // FreeMovement();
         GridMovement();
     }
 
