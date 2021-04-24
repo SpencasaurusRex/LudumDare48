@@ -3,7 +3,7 @@ using UnityEngine;
 public class GridObject : MonoBehaviour
 {
     public Vector2Int Location;
-    public GridType Type;
+    public GridType GridType;
 
     public Vector2Int Left => Location.Offset(Vector2Int.left);
     public Vector2Int Down => Location.Offset(Vector2Int.down);

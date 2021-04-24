@@ -1,9 +1,18 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
 
-public class Group {
+public class Group : IEquatable<Group>{
+    public int ID;
     public HashSet<Box> Contained = new HashSet<Box>();
     public List<Box> Items = new List<Box>();
+
+    public static int currentId;
+
+    public Group(Box b) {
+        ID = currentId++;
+        Contained.Add(b);
+        Items.Add(b);
+    }
 
     public void Add(Box b) {
         if (Contained.Contains(b)) return;
@@ -20,8 +29,12 @@ public class Group {
         Items.Remove(b);
     }
 
-    void Update() {
-
+    public override int GetHashCode() {
+        return ID;
     }
 
+    bool IEquatable<Group>.Equals(Group other)
+    {
+        return other.ID == ID;
+    }
 }

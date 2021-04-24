@@ -42,7 +42,7 @@ public class GridManager : MonoBehaviour {
             go.Location = newLocation;
             return true;
         }
-        return false;
+        throw new System.Exception("Moving to invalid spot");
     }
 
     public bool HasGridObject(Vector2Int coord) {

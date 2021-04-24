@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour {
     // Runtime
     InputMethod currentInputMethod;
     string GamepadAnyButton = "Gamepad any button";
-    GridObject gridObject;
+    // GridObject gridObject;
 
     public bool grounded = false;
     public bool drilling = false;
@@ -24,25 +24,34 @@ public class PlayerController : MonoBehaviour {
     GridManager grid;
     float timer;
 
+    Vector2Int Location;
+    public Vector2Int Left => Location.Offset(Vector2Int.left);
+    public Vector2Int Right => Location.Offset(Vector2Int.right);
+    public Vector2Int Down => Location.Offset(Vector2Int.down);
+    public Vector2Int Up => Location.Offset(Vector2Int.up);
+
     void Start() {
-        gridObject = GetComponent<GridObject>();
-        gridObject.Type = GridType.Player;
+        // gridObject = GetComponent<GridObject>();
+        // gridObject.GridType = GridType.Player;
         grid = GridManager.Instance;
+        Location = transform.position.xy().RoundToInt();
+        transform.position = Location.ToFloat();
     }
 
     void GridMovement() {
         if (falling) {
             transform.position += Vector3.down * Time.deltaTime * FallingSpeed;
             if (transform.position.y <= nextFallCheck) {
-                transform.position = gridObject.Location.ToFloat();
-                var nextGridPos = gridObject.Location + Vector2Int.down;
+                transform.position = Location.ToFloat();
+                var nextGridPos = Location + Vector2Int.down;
 
                 if (grid.HasGridObject(nextGridPos)) {
                     grounded = true;
                     falling = false;
                 }
                 else {
-                    grid.MoveGridObject(gridObject, nextGridPos);
+                    // grid.MoveGridObject(gridObject, nextGridPos);
+                    Location = nextGridPos;
                     nextFallCheck--;
                 }
             }
@@ -51,7 +60,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (moving) {
-            var target = gridObject.Location.ToFloat();
+            var target = Location.ToFloat();
             transform.position = Vector3.MoveTowards(transform.position, target, MovementSpeed * Time.deltaTime);
             if ((transform.position.xy() - target).magnitude < 0.01f) {
                 transform.position = target;
@@ -70,44 +79,52 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Check for ground
-        var groundGridPos = gridObject.Location.xy();
+        var groundGridPos = Location.xy();
         groundGridPos.y--;
         if (!grid.HasGridObject(groundGridPos)) {
             grounded = false;
             falling = true;
             nextFallCheck = groundGridPos.y;
-            grid.MoveGridObject(gridObject, groundGridPos); 
+            // grid.MoveGridObject(gridObject, groundGridPos); 
+            Location = groundGridPos;
             return;
         }
 
         if (Input.GetAxisRaw("Horizontal") < -DrillInputThreshold) { 
-            if (grid.HasGridObject(gridObject.Left)) {
+            if (grid.HasGridObject(Left)) {
                 // Drill left
-                grid.GetGridObject(gridObject.Left).GetComponent<Box>().Drill();
+                grid.GetGridObject(Left).GetComponent<Box>().Drill();
                 drilling = true;
             }
             else {
                 // Move left
                 moving = true;
-                grid.MoveGridObject(gridObject, gridObject.Left);
+                // grid.MoveGridObject(gridObject, gridObject.Left);
+                Location = Left;
             }
         }
         else if (Input.GetAxisRaw("Horizontal") > DrillInputThreshold) {
-            if (grid.HasGridObject(gridObject.Right)) {
+            if (grid.HasGridObject(Right)) {
                 // Drill right
-                grid.GetGridObject(gridObject.Right).GetComponent<Box>().Drill();
+                grid.GetGridObject(Right).GetComponent<Box>().Drill();
                 drilling = true;
             }
             else {
                 // Move right
                 moving = true;
-                grid.MoveGridObject(gridObject, gridObject.Right);
+                // grid.MoveGridObject(gridObject, gridObject.Right);
+                Location = Right;
             }
         }
         else if (Input.GetAxisRaw("Vertical") < -DrillInputThreshold) {
             // Drill down
-            grid.GetGridObject(gridObject.Down).GetComponent<Box>().Drill();
+            grid.GetGridObject(Down).GetComponent<Box>().Drill();
             drilling = true;
+        }
+
+        if (grid.HasGridObject(Location)) {
+            // Die
+            print("Die");
         }
     }
 
