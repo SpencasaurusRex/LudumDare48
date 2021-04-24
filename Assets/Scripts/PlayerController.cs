@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,113 +7,126 @@ public class PlayerController : MonoBehaviour {
     public float FallingSpeed;
     public float MovementSpeed;
     public float DrillInputThreshold = 0.5f;
+    public float DrillingTime;
 
     // Runtime
     InputMethod currentInputMethod;
     string GamepadAnyButton = "Gamepad any button";
-    Rigidbody2D rb;
-    Transform feet;
-    Transform leftSide;
-    Transform rightSide;
+    GridObject gridObject;
 
-    bool grounded;
-    bool leftCol;
-    bool rightCol;
-    bool drilling;
+    public bool grounded = false;
+    public bool drilling = false;
+    public bool moving = false;
+    public bool falling = false;
+
+    float nextFallCheck;
+
+    GridManager grid;
+    float timer;
 
     void Start() {
-        rb = GetComponent<Rigidbody2D>();
-        feet = transform.Find("Feet");
-        leftSide = transform.Find("LeftSide");
-        rightSide = transform.Find("RightSide");
+        gridObject = GetComponent<GridObject>();
+        gridObject.Type = GridType.Player;
+        grid = GridManager.Instance;
+    }
+
+    void GridMovement() {
+        if (falling) {
+            transform.position += Vector3.down * Time.deltaTime * FallingSpeed;
+            if (transform.position.y <= nextFallCheck) {
+                transform.position = gridObject.Location.ToFloat();
+                var nextGridPos = gridObject.Location + Vector2Int.down;
+
+                if (grid.HasGridObject(nextGridPos)) {
+                    grounded = true;
+                    falling = false;
+                }
+                else {
+                    grid.MoveGridObject(gridObject, nextGridPos);
+                    nextFallCheck--;
+                }
+            }
+
+            return;
+        }
+
+        if (moving) {
+            var target = gridObject.Location.ToFloat();
+            transform.position = Vector3.MoveTowards(transform.position, target, MovementSpeed * Time.deltaTime);
+            if ((transform.position.xy() - target).magnitude < 0.01f) {
+                transform.position = target;
+                moving = false;
+            }
+            return;
+        }
+
+        if (drilling) {
+            timer += Time.deltaTime;
+            if (timer >= DrillingTime) {
+                timer = 0;
+                drilling = false;
+            }
+            return;
+        }
+
+        // Check for ground
+        var groundGridPos = gridObject.Location.xy();
+        groundGridPos.y--;
+        if (!grid.HasGridObject(groundGridPos)) {
+            grounded = false;
+            falling = true;
+            nextFallCheck = groundGridPos.y;
+            grid.MoveGridObject(gridObject, groundGridPos); 
+            return;
+        }
+
+        if (Input.GetAxisRaw("Horizontal") < -DrillInputThreshold) { 
+            if (grid.HasGridObject(gridObject.Left)) {
+                // Drill left
+                grid.GetGridObject(gridObject.Left).GetComponent<Box>().Drill();
+                drilling = true;
+            }
+            else {
+                // Move left
+                moving = true;
+                grid.MoveGridObject(gridObject, gridObject.Left);
+            }
+        }
+        else if (Input.GetAxisRaw("Horizontal") > DrillInputThreshold) {
+            if (grid.HasGridObject(gridObject.Right)) {
+                // Drill right
+                grid.GetGridObject(gridObject.Right).GetComponent<Box>().Drill();
+                drilling = true;
+            }
+            else {
+                // Move right
+                moving = true;
+                grid.MoveGridObject(gridObject, gridObject.Right);
+            }
+        }
+        else if (Input.GetAxisRaw("Vertical") < -DrillInputThreshold) {
+            // Drill down
+            grid.GetGridObject(gridObject.Down).GetComponent<Box>().Drill();
+            drilling = true;
+        }
     }
 
     void Update() {
-        float x = Input.GetAxisRaw("Horizontal") * MovementSpeed;
-        float y = -FallingSpeed;
-    
-        RaycastHit2D[] belowCols = Physics2D.BoxCastAll(feet.position, feet.localScale, 0, Vector2.down, 1, LayerMask.GetMask("Default"));
-        if (belowCols.Length > 0) {
-            float distance = belowCols.Min(x => x.distance);
-            if (distance < 0.05f) {
-                grounded = true;
-                y = 0;
-            }
-            else grounded = false;
-        }
-        else grounded = false;
-
-        RaycastHit2D[] leftCols = Physics2D.BoxCastAll(leftSide.position, leftSide.localScale, 0, Vector2.left, 1, LayerMask.GetMask("Default"));
-        if (leftCols.Length > 0) {
-            float distance = leftCols.Min(x => x.distance);
-            if (distance < 0.05f) {
-                leftCol = true;
-                if (x < 0) x = 0;
-            }
-            else leftCol = false;
-        }
-        else leftCol = false;
-
-        RaycastHit2D[] rightCols = Physics2D.BoxCastAll(rightSide.position, rightSide.localScale, 0, Vector2.right, 1, LayerMask.GetMask("Default"));
-        if (rightCols.Length > 0) {
-            float distance = rightCols.Min(x => x.distance);
-            if (distance < 0.05f) {
-                rightCol = true;
-                if (x > 0) x = 0;
-            }
-            else rightCol = false;
-        }
-        else rightCol = false;
-
-        rb.velocity = new Vector2(x, y);
-
-        if (grounded) {
-            if (Input.GetAxisRaw("Vertical") < -DrillInputThreshold) {
-                DrillDown(belowCols);
-            }
-            if (leftCol) {
-                if (Input.GetAxisRaw("Horizontal") < -DrillInputThreshold) {
-                    DrillHorizontal(leftCols);
-                }
-            }
-            if (rightCol) {
-                if (Input.GetAxisRaw("Horizontal") > DrillInputThreshold) {
-                    DrillHorizontal(rightCols);
-                }
-            }
-        }
-    }
-
-    void DrillDown(RaycastHit2D[] cols) {
-        var col = cols.Where(x => x.collider.CompareTag("Box")).OrderBy(x => x.distance).ThenBy(x => Mathf.Abs(x.centroid.x - transform.position.x)).FirstOrDefault();
-        if (col) {
-            // TODO activate animation
-            col.collider.GetComponent<Box>().Drill();
-        }
-    }
-
-    void DrillHorizontal(RaycastHit2D[] cols) {
-        var col = cols.Where(x => x.collider.CompareTag("Box")).OrderBy(x => x.distance).ThenBy(x => Mathf.Abs(x.centroid.y - transform.position.y)).FirstOrDefault();
-        if (col) {
-            // TODO activate animation
-            col.collider.GetComponent<Box>().Drill();
-        }
+        // FreeMovement();
+        GridMovement();
     }
 
     void DetermineInputMethod() {
         // Mouse click
-        if (Input.GetMouseButtonDown((int) MouseButton.LeftMouse) || Input.GetMouseButtonDown((int) MouseButton.RightMouse))
-        {
+        if (Input.GetMouseButtonDown((int) MouseButton.LeftMouse)) {
             TransitionInputMethod(InputMethod.KeyboardMouse);
         }
         // Escape key
-        else if (Input.GetKeyDown(KeyCode.Escape))
-        {
+        else if (Input.GetKeyDown(KeyCode.Escape)) {
             TransitionInputMethod(InputMethod.KeyboardMouse);
         }
         // GamePad Button press
-        else if (Input.GetButtonDown(GamepadAnyButton))
-        {
+        else if (Input.GetButtonDown(GamepadAnyButton)) {
             TransitionInputMethod(InputMethod.Controller);
         }
     }
