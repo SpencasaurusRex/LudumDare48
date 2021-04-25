@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8816002635437806341}
   - component: {fileID: 8816002635437806340}
   - component: {fileID: 1681800874}
+  - component: {fileID: 1167055640032818134}
   m_Layer: 0
   m_Name: PinkBlock
   m_TagString: Box
@@ -194,6 +195,7 @@ MonoBehaviour:
   - {fileID: -3318870692741874168, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}
   - {fileID: -2334544754010253934, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}
   - {fileID: 5209234313383826405, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}
+  - {fileID: 21300000, guid: a02c5b3d931d72646bf84116ed16f0c6, type: 3}
   FallingSpeed: 8
   CanFall: 1
   WobbleCurve:
@@ -209,8 +211,26 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
+      time: 0.0625
+      value: 0.10019571
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
       time: 0.125
-      value: 0.2
+      value: 0
+      inSlope: -1.6564909
+      outSlope: -1.6564909
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.18111992
+      value: -0.096297115
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -220,15 +240,33 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.25
       value: 0
-      inSlope: -1.6
-      outSlope: -1.6
+      inSlope: 1.4956058
+      outSlope: 1.4956058
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3125
+      value: 0.10019571
+      inSlope: 0
+      outSlope: 0
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.375
-      value: -0.2
+      value: 0
+      inSlope: -1.6564909
+      outSlope: -1.6564909
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.43111992
+      value: -0.096297115
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -255,3 +293,29 @@ MonoBehaviour:
   JustFinishedFalling: 0
   TimeWobbling: 0
   Location: {x: 0, y: 0}
+--- !u!61 &1167055640032818134
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8816002635437806337}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.032258, y: 1.032258}
+    newSize: {x: 0.32, y: 0.32}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.032258, y: 1.032258}
+  m_EdgeRadius: 0

@@ -44,6 +44,7 @@ public class GridObject : MonoBehaviour {
     }
 
     public void Drill() {
+        if (!Drillable) return;
         foreach (var other in Group.Items) {
             Destroy(other.gameObject);
         }

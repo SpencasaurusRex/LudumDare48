@@ -67,21 +67,25 @@ public class GridManager : MonoBehaviour {
                     go.Group.Add(neighbor);
                 }
 
-                int nCombo = (int)neighbor.BlockColor * 16;
-                for (int j = 0; j < 4; j++) {
-                    var neighborNeighborPos = neighborPos.Offset(dirs[j]);
-                    var neighborNeighbor = GridManager.Instance.GetGridObject(neighborNeighborPos);
-                    if (neighborNeighbor != null && !neighborNeighbor.Falling && !neighborNeighbor.Wobbling && neighborNeighbor.BlockColor == neighbor.BlockColor) {
-                        nCombo += 1 << j;
-                        if (neighborNeighbor.Group != neighbor.Group) {
-                            go.Group.Add(neighbor);
+                if (neighbor.BlockColor != BlockColor.NonDrillable) {
+                    int nCombo = (int)neighbor.BlockColor * 16;
+                    for (int j = 0; j < 4; j++) {
+                        var neighborNeighborPos = neighborPos.Offset(dirs[j]);
+                        var neighborNeighbor = GridManager.Instance.GetGridObject(neighborNeighborPos);
+                        if (neighborNeighbor != null && !neighborNeighbor.Falling && !neighborNeighbor.Wobbling && neighborNeighbor.BlockColor == neighbor.BlockColor) {
+                            nCombo += 1 << j;
+                            if (neighborNeighbor.Group != neighbor.Group) {
+                                go.Group.Add(neighbor);
+                            }
                         }
                     }
+                    neighbor.GetComponent<SpriteRenderer>().sprite = neighbor.Sprites[nCombo];
                 }
-                neighbor.GetComponent<SpriteRenderer>().sprite = neighbor.Sprites[nCombo];
             }
         }
-        go.GetComponent<SpriteRenderer>().sprite = go.Sprites[combo];
+        if (go.BlockColor != BlockColor.NonDrillable) {
+            go.GetComponent<SpriteRenderer>().sprite = go.Sprites[combo];
+        }
     }
 
     List<Move> moves = new List<Move>();

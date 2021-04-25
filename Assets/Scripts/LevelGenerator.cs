@@ -24,14 +24,19 @@ public class LevelGenerator : MonoBehaviour
 
     void Generate() {
         for (int y = 0; y > -Height; y--) {
-            // int nonDrillableThisRow = 0;
+            int nonDrillableThisRow = 0;
             for (int x = 0; x < Width; x++) {
                 int i = Random.Range(0, Difficulty + 1);
-                // TODO: Nondrillable blocks
-                // if (Random.Range(0f, 1f) <= NonDrillableChance && nonDrillableThisRow < MaxNonDrillablePerRow) {
-                //     nonDrillableThisRow++;
-                // }
-                var box = Instantiate(BlockPrefabs[i], new Vector3(x, y, 0), Quaternion.identity);
+                var pos = new Vector3(x, y, 0);
+                
+                GridObject box;
+                if (Random.Range(0f, 1f) <= NonDrillableChance && nonDrillableThisRow < MaxNonDrillablePerRow) {
+                    nonDrillableThisRow++;
+                    box = Instantiate(NonDrillableBlockPrefab, pos, Quaternion.identity);
+                }
+                else {
+                    box = Instantiate(BlockPrefabs[i], pos, Quaternion.identity);
+                }
                 if (y == -Height+1) {
                     box.CanFall = false;
                 }

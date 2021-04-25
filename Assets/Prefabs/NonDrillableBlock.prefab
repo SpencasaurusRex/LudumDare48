@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 8816002635437806341}
   - component: {fileID: 8816002635437806340}
   - component: {fileID: 1681800874}
-  - component: {fileID: 5544322186535606264}
+  - component: {fileID: -6498264959686928389}
   m_Layer: 0
-  m_Name: Block
+  m_Name: NonDrillableBlock
   m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 4677932604682492237, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a02c5b3d931d72646bf84116ed16f0c6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,8 +96,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d4b3ab62700fc44aaf12fca7fbf7544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Drillable: 1
-  BlockColor: 0
+  Drillable: 0
+  BlockColor: 7
   Sprites:
   - {fileID: 4677932604682492237, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}
   - {fileID: -6187886777273847494, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}
@@ -293,7 +293,7 @@ MonoBehaviour:
   JustFinishedFalling: 0
   TimeWobbling: 0
   Location: {x: 0, y: 0}
---- !u!61 &5544322186535606264
+--- !u!61 &-6498264959686928389
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -310,12 +310,12 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.032258, y: 1.032258}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 0.32, y: 0.32}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.032258, y: 1.032258}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
