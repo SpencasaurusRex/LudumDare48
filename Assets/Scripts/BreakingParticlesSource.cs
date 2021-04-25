@@ -11,23 +11,32 @@ public class BreakingParticlesSource : MonoBehaviour
     public BlockColor BlockColor;
     public Vector2 Force;
     public float YVariation;
+    public float WaitTime;
+    public float Chance;
+    float t;
 
     void Update() {
-        for (int i = 0; i < Rate; i++) {
-            
-            var pos = transform.position + Vector3.up * Random.Range(-YVariation, YVariation);
+        t += Time.deltaTime;
+        if (t >= WaitTime) {
+            for (int i = 0; i < Rate; i++) {
+                if (Random.Range(0, 1f) > Chance) continue;
+                var pos = transform.position + Vector3.up * Random.Range(-YVariation, YVariation);
 
-            var life = Instantiate(BreakingParticlesPrefab, pos, Quaternion.identity);
-            life.GetComponent<SpriteRenderer>().sprite = BreakingParticlesSprites[(int)BlockColor];
-            life.GetComponent<Rigidbody2D>().velocity = Force.WithZ(0);
+                var life = Instantiate(BreakingParticlesPrefab, pos, Quaternion.identity);
+                life.GetComponent<SpriteRenderer>().sprite = BreakingParticlesSprites[(int)BlockColor];
+                
+                float o = 1f;
+                Vector2 offset = new Vector2(Random.Range(-o, o), Random.Range(-o, o));
+                life.GetComponent<Rigidbody2D>().velocity = (Force + offset).WithZ(0);
 
-            float r = Random.Range(0, 1f);
-            float k = (1 - SmallerBias) * (1 - SmallerBias) * (1 - SmallerBias);
-            int size = (int)((r * k * 4) / (r * k - r + 1)) + 1;
-            life.transform.localScale = Vector3.one * size;
-            life.DefaultScale = size;
+                float r = Random.Range(0, 1f);
+                float k = (1 - SmallerBias) * (1 - SmallerBias) * (1 - SmallerBias);
+                int size = (int)((r * k * 4) / (r * k - r + 1)) + 3;
+                life.transform.localScale = Vector3.one * size;
+                life.DefaultScale = size;
 
-            life.Amount = size * 0.25f;
+                life.Amount = size * 0.25f;
+            }
         }
     }
 

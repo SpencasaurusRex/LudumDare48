@@ -58,6 +58,8 @@ MonoBehaviour:
   BlockColor: 0
   Force: {x: 0, y: 0}
   YVariation: 0.1
+  WaitTime: 0.3
+  Chance: 0.5
 --- !u!114 &2611536654236495115
 MonoBehaviour:
   m_ObjectHideFlags: 0

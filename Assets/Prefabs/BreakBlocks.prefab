@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6257625893406610317}
   - component: {fileID: 6257625893406610316}
   - component: {fileID: 1322955890390957904}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BreakBlocksCorner (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd1905163980fcd45bc89190b05c2b77, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -115,7 +115,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 6257625893406610306}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd1905163980fcd45bc89190b05c2b77, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -148,6 +148,7 @@ MonoBehaviour:
   FadeAlpha: 1
   FadeScale: 1
   DefaultScale: 1
+  RandomVariation: 0.3
 --- !u!1 &6257625893482561288
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,7 +162,7 @@ GameObject:
   - component: {fileID: 6257625893482561290}
   - component: {fileID: 6257625893482561300}
   - component: {fileID: 7178472453813965367}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BreakBlocksCorner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +250,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd1905163980fcd45bc89190b05c2b77, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -263,7 +264,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 6257625893482561288}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd1905163980fcd45bc89190b05c2b77, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -296,6 +297,7 @@ MonoBehaviour:
   FadeAlpha: 1
   FadeScale: 1
   DefaultScale: 1
+  RandomVariation: 0.3
 --- !u!1 &6257625894609418064
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +311,7 @@ GameObject:
   - component: {fileID: 6257625894609418067}
   - component: {fileID: 6257625894609418066}
   - component: {fileID: 3065345569189197633}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BreakBlocksCorner (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -397,7 +399,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd1905163980fcd45bc89190b05c2b77, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -411,7 +413,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 6257625894609418064}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd1905163980fcd45bc89190b05c2b77, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -444,6 +446,7 @@ MonoBehaviour:
   FadeAlpha: 1
   FadeScale: 1
   DefaultScale: 1
+  RandomVariation: 0.3
 --- !u!1 &6257625895180395749
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,7 +460,7 @@ GameObject:
   - component: {fileID: 6257625895180395744}
   - component: {fileID: 6257625895180395751}
   - component: {fileID: 8223779317218013533}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BreakBlocksCorner (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -545,7 +548,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd1905163980fcd45bc89190b05c2b77, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -559,7 +562,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 6257625895180395749}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd1905163980fcd45bc89190b05c2b77, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -592,6 +595,7 @@ MonoBehaviour:
   FadeAlpha: 1
   FadeScale: 1
   DefaultScale: 1
+  RandomVariation: 0.3
 --- !u!1 &6257625895220614053
 GameObject:
   m_ObjectHideFlags: 0

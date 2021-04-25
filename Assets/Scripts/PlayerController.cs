@@ -13,15 +13,17 @@ public class PlayerController : MonoBehaviour {
     public int LeftMost = 0;
     public int RightMost = 8;
     public GameObject BreakingParticlesSourcePrefab;
+    public float LandingTime = 0.2f;
 
     // Runtime
-    InputMethod currentInputMethod;
-    string GamepadAnyButton = "Gamepad any button";
     public bool grounded = false;
     public bool drilling = false;
     public bool moving = false;
     public bool falling = false;
-    
+    public bool dead = false;
+    public bool landing = false;
+    float landingTimer;
+
     Animator animator;
     GridObject drillingBlock;
 
@@ -59,23 +61,15 @@ public class PlayerController : MonoBehaviour {
         WindupDown = 6,
         DrillDown = 7,
 
-        Falling = 8
+        Falling = 8,
+        Landing = 9,
+
+        Dead = 10
     }
 
     void SetState(State state) {
         if (animator.GetInteger("State") != (int)state)
             animator.SetInteger("State", (int)state);
-        // switch (state) {
-        //     case State.Idle:
-        //         animator.SetTrigger("Idle");
-        //         break;
-        //     case State.Windup:
-        //         animator.SetTrigger("Windup");
-        //         break;
-        //     case State.Walking:
-        //         animator.SetTrigger("Walk");
-        //         break;
-        // }
     }    
 
     void GridMovement() {
@@ -88,7 +82,8 @@ public class PlayerController : MonoBehaviour {
                 if (grid.HasGridObject(nextGridPos)) {
                     grounded = true;
                     falling = false;
-                    SetState(State.Idle);
+                    landing = true;
+                    SetState(State.Landing);
                 }
                 else {
                     // grid.MoveGridObject(gridObject, nextGridPos);
@@ -98,6 +93,14 @@ public class PlayerController : MonoBehaviour {
             }
 
             return;
+        }
+        
+        if (landing) {
+            landingTimer += Time.deltaTime;
+            if (landingTimer >= LandingTime) {
+                landing = false;
+                landingTimer = 0;
+            }
         }
 
         if (moving) {
@@ -131,6 +134,9 @@ public class PlayerController : MonoBehaviour {
             falling = true;
             nextFallCheck = groundGridPos.y;
             Location = groundGridPos;
+
+            SetState(State.Falling);
+            animator.SetTrigger("Fall");
             return;
         }
 
@@ -140,13 +146,11 @@ public class PlayerController : MonoBehaviour {
                     if (grid.GetGridObject(pos).Drillable) {
                         drilling = true;
                         drillingBlock = box;
-                        // var sourceGo = Instantiate(BreakingParticlesSourcePrefab, (transform.position + pos.WithZ(0).ToFloat()) * 0.5f, Quaternion.identity); 
-                        // var force = 2 * (transform.position - pos.WithZ(0).ToFloat());
-                        // force.y *= 2;
-                        // force.x += Random.Range(-0.3f, 0.3f);
-                        // var source = sourceGo.GetComponent<BreakingParticlesSource>();
-                        // source.Force = force; 
-                        // source.BlockColor = box.BlockColor;
+                        var sourceGo = Instantiate(BreakingParticlesSourcePrefab, (transform.position + pos.WithZ(0).ToFloat()) * 0.5f, Quaternion.identity); 
+                        var force = 2 * (transform.position - pos.WithZ(0).ToFloat());
+                        var source = sourceGo.GetComponent<BreakingParticlesSource>();
+                        source.Force = force; 
+                        source.BlockColor = box.BlockColor;
 
                         var delta = pos - Location;
                         if (delta.y < 0) {
@@ -203,7 +207,9 @@ public class PlayerController : MonoBehaviour {
                 y = fallingGrid.transform.position.y - fallingGrid.Location.y;
             }
             if (y < FallingBlockKillGap) {
-                print("Die");
+                dead = true;
+                SetState(State.Dead);
+                return;
             }
         }
 
@@ -211,6 +217,9 @@ public class PlayerController : MonoBehaviour {
             SetState(State.Walking);
         }
         else if (drilling) {
+             
+        }
+        else if (landing) {
 
         }
         else {
@@ -219,32 +228,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update() {
-        GridMovement();
-    }
-
-    void DetermineInputMethod() {
-        // Mouse click
-        if (Input.GetMouseButtonDown((int) MouseButton.LeftMouse)) {
-            TransitionInputMethod(InputMethod.KeyboardMouse);
+        if (!dead) {
+            GridMovement();
         }
-        // Escape key
-        else if (Input.GetKeyDown(KeyCode.Escape)) {
-            TransitionInputMethod(InputMethod.KeyboardMouse);
-        }
-        // GamePad Button press
-        else if (Input.GetButtonDown(GamepadAnyButton)) {
-            TransitionInputMethod(InputMethod.Controller);
-        }
-    }
-
-    void TransitionInputMethod(InputMethod method) {
-        if (currentInputMethod != method) {
-            currentInputMethod = method;
-        }
-    }
-
-    enum InputMethod {
-        KeyboardMouse, 
-        Controller
     }
 }
