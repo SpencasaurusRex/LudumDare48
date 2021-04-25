@@ -7,6 +7,8 @@ public class CameraFollow : MonoBehaviour
     public float LeftLimit;
     public float RightLimit;
 
+    bool MatchY = true;
+
     Camera cam;
 
     void Start() {
@@ -25,6 +27,10 @@ public class CameraFollow : MonoBehaviour
 
             transform.position = Vector3.Lerp(transform.position, Follow.position.WithZ(transform.position.z), LerpStrength);
             transform.position = transform.position.WithX(Mathf.Clamp(transform.position.x, leftMost, rightMost)); 
+
+            if (MatchY) {
+                transform.position = transform.position.WithY(Follow.position.y);
+            }
         }
     }
 
