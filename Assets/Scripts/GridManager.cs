@@ -51,7 +51,6 @@ public class GridManager : MonoBehaviour {
         return Grid.ContainsKey(coord);
     }
 
-    Dictionary<GridObject, Group> groups = new Dictionary<GridObject, Group>();
     Vector2Int[] dirs = new [] {Vector2Int.right, Vector2Int.up, Vector2Int.left, Vector2Int.down};
 
     void Connected(GridObject go) {
@@ -110,7 +109,6 @@ public class GridManager : MonoBehaviour {
         moves.Clear();
 
         // Recalculate groups
-        groups.Clear();
         foreach (var go in GridObjects) {
             if (go.RecalculateGroup) {
                 Connected(go);
@@ -202,6 +200,15 @@ public class GridManager : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void Clear() {
+        foreach (var obj in GridObjects) {
+            Destroy(obj.gameObject);
+        }
+        moves.Clear();
+        GridObjects.Clear();
+        Grid.Clear();
     }
 
     void OnDrawGizmos() {

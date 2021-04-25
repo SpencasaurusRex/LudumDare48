@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour {
     public bool dead = false;
     public bool landing = false;
     float landingTimer;
+    SpriteRenderer blackoutPanel;
+    Reveal PressAnyText;
 
     Animator animator;
     GridObject drillingBlock;
@@ -46,6 +48,9 @@ public class PlayerController : MonoBehaviour {
         transform.position = Location.ToFloat();
         animator = GetComponent<Animator>();
         SetState(State.Idle);
+        blackoutPanel = transform.Find("BlackoutPanel").GetComponent<SpriteRenderer>();
+
+        PressAnyText = FindObjectOfType<Reveal>();
     }
 
     enum State {
@@ -227,9 +232,50 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    public float DeathFadeSpeed = 0.5f;
+    float deadTimer = 0;
+
     void Update() {
         if (!dead) {
+            deadTimer = Mathf.Clamp01(deadTimer - Time.deltaTime * DeathFadeSpeed);
+            if (deadTimer < .001f) {
+                blackoutPanel.sortingOrder = 1;
+            }
             GridMovement();
         }
+        else {
+            deadTimer = Mathf.Clamp01(deadTimer + Time.deltaTime * DeathFadeSpeed);
+
+            if (deadTimer > 0.8f) {
+                PressAnyText.StartReveal();
+            }
+
+            if (deadTimer > 0.99f && Input.anyKey) {
+                PressAnyText.Hide();
+                ResetLevel();
+            }
+        }
+        blackoutPanel.color = new Color(blackoutPanel.color.r, blackoutPanel.color.g, blackoutPanel.color.b, deadTimer);
+    }
+
+    public void ResetLevel() {
+        blackoutPanel.sortingOrder = 3;
+        GridManager.Instance.Clear();
+        Location = new Vector2Int(4, 1);
+        transform.position = Location.ToFloat();
+        SetState(State.Idle);
+        animator.SetTrigger("Reset");
+        grounded = true;
+        drilling = false;
+        moving = false;
+        falling = false;
+        dead = false;
+        landing = false;
+        
+        LevelGenerator.Instance.Generate(0);
+    }
+
+    public void Victory() {
+
     }
 }

@@ -651,4 +651,4 @@ MonoBehaviour:
   - {fileID: 4964802430044736106, guid: b15a8f2b02ccf8d439d685494f24d90d, type: 3}
   - {fileID: -8262077499325085665, guid: b15a8f2b02ccf8d439d685494f24d90d, type: 3}
   BlockColor: 0
-  ForceMagnify: 3
+  ForceMagnify: 5
