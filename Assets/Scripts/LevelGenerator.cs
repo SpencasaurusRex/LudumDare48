@@ -3,8 +3,8 @@ using UnityEngine;
 public class LevelGenerator : MonoBehaviour
 {
     // Configuration
-    public Box[] BlockPrefabs;
-    public GameObject NonDrillableBlockPrefab;
+    public GridObject[] BlockPrefabs;
+    public GridObject NonDrillableBlockPrefab;
     
     public int Width = 9;
     public int Height = 30;
@@ -24,7 +24,7 @@ public class LevelGenerator : MonoBehaviour
 
     void Generate() {
         for (int y = 0; y > -Height; y--) {
-            int nonDrillableThisRow = 0;
+            // int nonDrillableThisRow = 0;
             for (int x = 0; x < Width; x++) {
                 int i = Random.Range(0, Difficulty + 1);
                 // TODO: Nondrillable blocks

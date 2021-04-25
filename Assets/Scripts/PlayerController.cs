@@ -94,12 +94,12 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetAxisRaw("Horizontal") < -DrillInputThreshold) { 
             if (grid.HasGridObject(Left)) {
                 // Drill left
-                var box = grid.GetGridObject(Left).GetComponent<Box>();
+                var box = grid.GetGridObject(Left);
                 if (!box.Falling) {
-                    grid.GetGridObject(Left).GetComponent<Box>().Drill();
+                    grid.GetGridObject(Left).Drill();
                     drilling = true;
                 }
-                else if (box.transform.position.y - box.GridObject.Location.y > FallingBlockWalkGap) {
+                else if (box.transform.position.y - box.Location.y > FallingBlockWalkGap) {
                     moving = true;
                     Location = Left;
                 }
@@ -113,12 +113,12 @@ public class PlayerController : MonoBehaviour {
         else if (Input.GetAxisRaw("Horizontal") > DrillInputThreshold) {
             if (grid.HasGridObject(Right)) {
                 // Drill right
-                var box =  grid.GetGridObject(Right).GetComponent<Box>();
+                var box =  grid.GetGridObject(Right);
                 if (!box.Falling) {
                     box.Drill();
                     drilling = true;
                 } 
-                else if (box.transform.position.y - box.GridObject.Location.y > FallingBlockWalkGap) {
+                else if (box.transform.position.y - box.Location.y > FallingBlockWalkGap) {
                     moving = true;
                     Location = Right;
                 }
@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour {
         }
         else if (Input.GetAxisRaw("Vertical") < -DrillInputThreshold) {
             // Drill down
-            var box = grid.GetGridObject(Down).GetComponent<Box>();
+            var box = grid.GetGridObject(Down);
             if (!box.Falling) {
                 box.Drill();
                 drilling = true;
@@ -140,10 +140,9 @@ public class PlayerController : MonoBehaviour {
 
         var fallingGrid = grid.GetGridObject(Location);
         if (fallingGrid) {
-            var fallingBlock = fallingGrid.GetComponent<Box>();
             float y = 0;
-            if (fallingBlock.Falling) {
-                y = fallingBlock.transform.position.y - fallingGrid.Location.y;
+            if (fallingGrid.Falling) {
+                y = fallingGrid.transform.position.y - fallingGrid.Location.y;
             }
             if (y < FallingBlockKillGap) {
                 print("Die");

@@ -251,6 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4371a243d6086f84488cb671e13fd332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Debug: 0
 --- !u!4 &1199928699
 Transform:
   m_ObjectHideFlags: 0
@@ -277,7 +278,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54a8134f36b1524884a15d35b5b749d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Boxes: []
 --- !u!114 &1199928701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,18 +291,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BlockPrefabs:
-  - {fileID: 8816002635437806342, guid: 6d19615ec43756f4ba380250234bfe7f, type: 3}
-  - {fileID: 8816002635437806342, guid: 2ba260bb83344474493abe0b5082564d, type: 3}
-  - {fileID: 8816002635437806342, guid: 503f6250286713e43999be1507ca833a, type: 3}
-  - {fileID: 8816002635437806342, guid: a2d2c0a87c9d9c14e81c0cc114ed4586, type: 3}
-  - {fileID: 8816002635437806342, guid: 5d338dc8f68ecad43ac3afcd6842aa50, type: 3}
-  - {fileID: 8816002635437806342, guid: c63f90ba953b35748b214c339f9a587c, type: 3}
+  - {fileID: 1681800874, guid: 61cca113721af2d4ca06d27570c345a1, type: 3}
+  - {fileID: 1681800874, guid: 65d6b647f2f47fc49aecaa1b7161abdc, type: 3}
+  - {fileID: 1681800874, guid: f683bf399be14d84dab11ca565513bb2, type: 3}
+  - {fileID: 1681800874, guid: 0856466ffb0bfd546a0acbc5fdb0f6df, type: 3}
+  - {fileID: 1681800874, guid: eef3c38d0646fbb4fae1332c824bba82, type: 3}
+  - {fileID: 1681800874, guid: 1fbe2168f08899f4d90c8c5a0575061a, type: 3}
   NonDrillableBlockPrefab: {fileID: 0}
   Width: 9
-  Height: 30
+  Height: 50
   MaxNonDrillablePerRow: 2
   NonDrillableChance: 0.1
-  Difficulty: 4
+  Difficulty: 5
 --- !u!1 &1339889354
 GameObject:
   m_ObjectHideFlags: 0
