@@ -3,8 +3,8 @@ using UnityEngine;
 public class LevelGenerator : MonoBehaviour
 {
     // Configuration
-    public Box[] BlockPrefabs;
-    public GameObject NonDrillableBlockPrefab;
+    public GridObject[] BlockPrefabs;
+    public GridObject NonDrillableBlockPrefab;
     
     public int Width = 9;
     public int Height = 30;
@@ -27,11 +27,16 @@ public class LevelGenerator : MonoBehaviour
             int nonDrillableThisRow = 0;
             for (int x = 0; x < Width; x++) {
                 int i = Random.Range(0, Difficulty + 1);
-                // TODO: Nondrillable blocks
-                // if (Random.Range(0f, 1f) <= NonDrillableChance && nonDrillableThisRow < MaxNonDrillablePerRow) {
-                //     nonDrillableThisRow++;
-                // }
-                var box = Instantiate(BlockPrefabs[i], new Vector3(x, y, 0), Quaternion.identity);
+                var pos = new Vector3(x, y, 0);
+                
+                GridObject box;
+                if (Random.Range(0f, 1f) <= NonDrillableChance && nonDrillableThisRow < MaxNonDrillablePerRow) {
+                    nonDrillableThisRow++;
+                    box = Instantiate(NonDrillableBlockPrefab, pos, Quaternion.identity);
+                }
+                else {
+                    box = Instantiate(BlockPrefabs[i], pos, Quaternion.identity);
+                }
                 if (y == -Height+1) {
                     box.CanFall = false;
                 }
