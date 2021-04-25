@@ -9,6 +9,7 @@ public class GridObject : MonoBehaviour {
     public bool CanFall = true;
     public AnimationCurve WobbleCurve;
     public float WobbleAnimationLength = 0.5f;
+    public BreakBlock BreakBlockPrefab;
 
     // Runtime
     public bool Falling;
@@ -29,7 +30,7 @@ public class GridObject : MonoBehaviour {
 
     void Start() {
         if (BlockColor == BlockColor.None) {
-            BlockColor = (BlockColor)Random.Range(0, (int)BlockColor.Max);
+            BlockColor = (BlockColor)Random.Range(0, (int)BlockColor.NonDrillable);
         }
         Location = transform.position.xy().RoundToInt();
         transform.position = Location.ToFloat();
@@ -45,10 +46,14 @@ public class GridObject : MonoBehaviour {
 
     public void Drill() {
         if (!Drillable) return;
+
         foreach (var other in Group.Items) {
+            other.GetComponent<Collider2D>().enabled = false;
+            var breakBlock = Instantiate(BreakBlockPrefab, other.Location.ToFloat(), Quaternion.identity);
+            breakBlock.BlockColor = other.BlockColor;
+            breakBlock.Setup();
             Destroy(other.gameObject);
         }
-        Destroy(gameObject);
     }
 }
 

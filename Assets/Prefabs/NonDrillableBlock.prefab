@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Drillable: 0
-  BlockColor: 7
+  BlockColor: 6
   Sprites:
   - {fileID: 4677932604682492237, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}
   - {fileID: -6187886777273847494, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}

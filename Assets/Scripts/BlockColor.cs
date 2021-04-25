@@ -6,6 +6,5 @@ public enum BlockColor {
     Pink,
     Brown,
     Green,
-    Max,
     NonDrillable
 }
