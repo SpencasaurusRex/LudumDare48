@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour {
     public float DrillingTime;
     public float FallingBlockWalkGap = 0.75f;
     public float FallingBlockKillGap = 0.3f;
+    public int LeftMost = 0;
+    public int RightMost = 8;
 
     // Runtime
     InputMethod currentInputMethod;
@@ -105,9 +107,11 @@ public class PlayerController : MonoBehaviour {
                 }
             }
             else {
-                // Move left
-                moving = true;
-                Location = Left;
+                if (Left.x >= LeftMost) {
+                    // Move left
+                    moving = true;
+                    Location = Left;
+                }
             }
         }
         else if (Input.GetAxisRaw("Horizontal") > DrillInputThreshold) {
@@ -124,9 +128,11 @@ public class PlayerController : MonoBehaviour {
                 }
             }
             else {
-                // Move right
-                moving = true;
-                Location = Right;
+                if (Right.x <= RightMost) {
+                    // Move right
+                    moving = true;
+                    Location = Right;
+                }
             }
         }
         else if (Input.GetAxisRaw("Vertical") < -DrillInputThreshold) {
