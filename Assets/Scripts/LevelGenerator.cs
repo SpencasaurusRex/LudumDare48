@@ -7,14 +7,17 @@ public class LevelGenerator : MonoBehaviour
     // Configuration
     public GridObject[] BlockPrefabs;
     public GridObject NonDrillableBlockPrefab;
-    
+    public Transform BackgroundGrid;
+
     public int Width = 9;
     public int Height = 30;
     public int MaxNonDrillablePerRow = 2;
     public float NonDrillableChance = .1f;
 
     // Runtime
-    public int Difficulty = 4;
+    public int StartingDifficulty = 3;
+    float Difficulty;
+    Transform lastGrid;
 
     void Awake() {
         if (Instance) {
@@ -24,6 +27,7 @@ public class LevelGenerator : MonoBehaviour
     }
 
     void Start() {
+        Difficulty = StartingDifficulty;
         Generate(0);
     }
 
@@ -31,15 +35,23 @@ public class LevelGenerator : MonoBehaviour
         
     }
 
-    public void Generate(int atY) {
+    public void Reset() {
+        Difficulty = StartingDifficulty;
+    }
+
+    public int Generate(int atY) {
+        if (lastGrid) {
+            Destroy(lastGrid.gameObject);
+        }
+        lastGrid = Instantiate(BackgroundGrid, new Vector3(-0.5f, -0.5f + atY, 0), Quaternion.identity);
         for (int y = 0; y > -Height; y--) {
             int nonDrillableThisRow = 0;
             for (int x = 0; x < Width; x++) {
-                int i = Random.Range(0, Difficulty + 1);
+                int i = Random.Range(0, Mathf.Clamp((int)Difficulty, 0, 5) + 1);
                 var pos = new Vector3(x, y + atY, 0);
                 
                 GridObject box;
-                if (Random.Range(0f, 1f) <= NonDrillableChance && nonDrillableThisRow < MaxNonDrillablePerRow) {
+                if (Random.Range(0f, 1f) <= NonDrillableChance + Difficulty / 50f && nonDrillableThisRow < MaxNonDrillablePerRow) {
                     nonDrillableThisRow++;
                     box = Instantiate(NonDrillableBlockPrefab, pos, Quaternion.identity);
                 }
@@ -51,5 +63,7 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
+        Difficulty += 0.75f;
+        return -Height + atY;
     }
 }

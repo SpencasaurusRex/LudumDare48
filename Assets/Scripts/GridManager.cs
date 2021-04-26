@@ -204,7 +204,8 @@ public class GridManager : MonoBehaviour {
 
     public void Clear() {
         foreach (var obj in GridObjects) {
-            Destroy(obj.gameObject);
+            if (obj != null)
+                Destroy(obj.gameObject);
         }
         moves.Clear();
         GridObjects.Clear();
