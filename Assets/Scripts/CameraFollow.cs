@@ -16,7 +16,16 @@ public class CameraFollow : MonoBehaviour
         player = FindObjectOfType<PlayerController>();
     }
 
+    float lerpStrength;
+
     void LateUpdate() {
+        if (player.victory) {
+            lerpStrength = 0.1f * LerpStrength;
+        }
+        else {
+            lerpStrength = Mathf.Clamp(lerpStrength + Time.deltaTime * LerpStrength, 0, LerpStrength);
+        }
+
         if (Follow) {
             float halfHeight = cam.orthographicSize;
             float halfWidth = cam.aspect * halfHeight;
@@ -26,10 +35,15 @@ public class CameraFollow : MonoBehaviour
                 rightMost = leftMost = (RightLimit + LeftLimit) * 0.5f;
             }
 
-            transform.position = Vector3.Lerp(transform.position, Follow.position.WithZ(transform.position.z), LerpStrength);
-            if (!player.dead) {
-                transform.position = transform.position.WithX(Mathf.Clamp(transform.position.x, leftMost, rightMost)); 
+            var followPosition = Follow.position.WithZ(transform.position.z);
+            if (player.victory) {
+                followPosition = followPosition.WithX(followPosition.x + halfWidth * 0.5f);
             }
+            if (!player.victory && !player.dead && lerpStrength == LerpStrength) {
+                followPosition = followPosition.WithX(Mathf.Clamp(followPosition.x, leftMost, rightMost));    
+            }
+            
+            transform.position = Vector3.Lerp(transform.position, followPosition, lerpStrength);
 
             if (MatchY) {
                 transform.position = transform.position.WithY(Follow.position.y);
