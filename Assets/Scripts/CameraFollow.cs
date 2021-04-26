@@ -7,7 +7,7 @@ public class CameraFollow : MonoBehaviour
     public float LeftLimit;
     public float RightLimit;
 
-    bool MatchY = true;
+    public bool MatchY = true;
 
     Camera cam;
 
@@ -15,7 +15,7 @@ public class CameraFollow : MonoBehaviour
         cam = GetComponent<Camera>();
     }
 
-    void Update() {
+    void LateUpdate() {
         if (Follow) {
             float halfHeight = cam.orthographicSize;
             float halfWidth = cam.aspect * halfHeight;
