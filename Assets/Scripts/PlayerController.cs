@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour {
     public int RightMost = 8;
     public GameObject BreakingParticlesSourcePrefab;
     public float LandingTime = 0.2f;
+    public Image[] CreditImages;
 
     // Runtime
     public bool grounded = false;
@@ -281,6 +283,11 @@ public class PlayerController : MonoBehaviour {
             if (Input.anyKey) {
                 start = false;
                 transform.localScale = Vector3.one;
+                foreach (var image in CreditImages) {
+                    var lt = image.gameObject.AddComponent<Lifetime>();
+                    lt.Amount = 1f;
+                    lt.FadeAlpha = true;
+                }
             }
             return;
         }

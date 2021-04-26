@@ -3300,6 +3300,22 @@ PrefabInstance:
       propertyPath: FallingSpeed
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 3502771508917898750, guid: 0e01fcd89f25c1a4a8b86ca1c25d9418, type: 3}
+      propertyPath: CreditImages.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3502771508917898750, guid: 0e01fcd89f25c1a4a8b86ca1c25d9418, type: 3}
+      propertyPath: CreditImages.Array.data[0]
+      value: 
+      objectReference: {fileID: 1848552404}
+    - target: {fileID: 3502771508917898750, guid: 0e01fcd89f25c1a4a8b86ca1c25d9418, type: 3}
+      propertyPath: CreditImages.Array.data[1]
+      value: 
+      objectReference: {fileID: 239818071}
+    - target: {fileID: 3502771508917898750, guid: 0e01fcd89f25c1a4a8b86ca1c25d9418, type: 3}
+      propertyPath: CreditImages.Array.data[2]
+      value: 
+      objectReference: {fileID: 1072084543}
     - target: {fileID: 3502771508917898751, guid: 0e01fcd89f25c1a4a8b86ca1c25d9418, type: 3}
       propertyPath: m_RootOrder
       value: 1
