@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour {
     public bool dead = false;
     public bool landing = false;
     public bool victory = false;
+    bool start = true;
     float landingTimer;
     int nextBottom;
     SpriteRenderer blackoutPanel;
@@ -44,8 +45,6 @@ public class PlayerController : MonoBehaviour {
     GameObject lastSource;
 
     void Start() {
-        // gridObject = GetComponent<GridObject>();
-        // gridObject.GridType = GridType.Player;
         grid = GridManager.Instance;
         Location = transform.position.xy().RoundToInt();
         transform.position = Location.ToFloat();
@@ -56,6 +55,7 @@ public class PlayerController : MonoBehaviour {
         nextBottom = -FindObjectOfType<LevelGenerator>().Height - 10;
 
         PressAnyText = FindObjectOfType<Reveal>();
+        cameraFollow = FindObjectOfType<CameraFollow>();
     }
 
     enum State {
@@ -164,7 +164,8 @@ public class PlayerController : MonoBehaviour {
                 drilling = false;
                 timer = 0;
                 drillingBlock = null;
-                lastSource.GetComponent<Lifetime>().Amount = 0;
+                if (lastSource != null)
+                    lastSource.GetComponent<Lifetime>().Amount = 0;
             }
             else {
                 timer += Time.deltaTime;
@@ -272,8 +273,23 @@ public class PlayerController : MonoBehaviour {
 
     public float DeathFadeSpeed = 0.5f;
     float deadTimer = 0;
+    bool cameraUnassigned = true;
+    CameraFollow cameraFollow;
 
     void Update() {
+        if (start) {
+            if (Input.anyKey) {
+                start = false;
+                transform.localScale = Vector3.one;
+            }
+            return;
+        }
+        if (cameraUnassigned) {
+            if (transform.position.y < cameraFollow.transform.position.y) {
+                cameraFollow.Follow = transform;
+                cameraUnassigned = true;
+            }
+        }
         if (!dead) {
             deadTimer = Mathf.Clamp01(deadTimer - Time.deltaTime * DeathFadeSpeed);
             if (deadTimer < .001f) {
