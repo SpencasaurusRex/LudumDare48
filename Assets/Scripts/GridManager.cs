@@ -3,6 +3,10 @@ using System.Linq;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour {
+    // Configuration
+    public Sprite[] Sprites;
+    
+    // Runtime
     public Dictionary<Vector2Int, GridObject> Grid = new Dictionary<Vector2Int, GridObject>();
     List<GridObject> GridObjects = new List<GridObject>();
     public static GridManager Instance { get; set; }
@@ -78,12 +82,12 @@ public class GridManager : MonoBehaviour {
                             }
                         }
                     }
-                    neighbor.GetComponent<SpriteRenderer>().sprite = neighbor.Sprites[nCombo];
+                    neighbor.GetComponent<SpriteRenderer>().sprite = Sprites[nCombo];
                 }
             }
         }
         if (go.BlockColor != BlockColor.NonDrillable) {
-            go.GetComponent<SpriteRenderer>().sprite = go.Sprites[combo];
+            go.GetComponent<SpriteRenderer>().sprite = Sprites[combo];
         }
     }
 

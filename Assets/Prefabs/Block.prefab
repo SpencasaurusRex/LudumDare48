@@ -286,6 +286,8 @@ MonoBehaviour:
   WobbleAnimationLength: 0.5
   BreakBlockPrefab: {fileID: 0}
   DrillTime: 0.5
+  CoinPrefab: {fileID: 5251960844801285811, guid: 84a420926a1bfc64b81cd5f5735d4f0e, type: 3}
+  CoinAmount: 0.5
   Falling: 0
   Stable: 0
   Wobbling: 0

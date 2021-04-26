@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour {
     public GameObject BreakingParticlesSourcePrefab;
     public float LandingTime = 0.2f;
     public Image[] CreditImages;
+    public Sound SoundPrefab;
 
     // Runtime
     public bool grounded = false;
@@ -279,6 +280,8 @@ public class PlayerController : MonoBehaviour {
     CameraFollow cameraFollow;
 
     void Update() {
+        lastCoinCreated += Time.deltaTime;
+
         if (start) {
             if (Input.anyKey) {
                 start = false;
@@ -335,6 +338,22 @@ public class PlayerController : MonoBehaviour {
         landing = false;
         
         nextBottom = LevelGenerator.Instance.Generate(0);
+    }
+
+    float lastCoinCreated = 0;
+    int coinCount;
+    void CollectCoin() {
+        if (lastCoinCreated >= 0.1f) {
+            lastCoinCreated = 0;
+            var sound = Instantiate(SoundPrefab);
+        }
+        
+        coinCount++;
+    }
+
+    void OnCollisionEnter2D(Collision2D other) {
+        Destroy(other.gameObject);
+        CollectCoin();
     }
 
     public void Victory() {
