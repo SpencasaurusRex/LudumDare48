@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Reveal : MonoBehaviour
 {
@@ -11,17 +12,30 @@ public class Reveal : MonoBehaviour
             t += Time.deltaTime * Speed;
             for (int i = 0; i < t && i < transform.childCount; i++) {
                 var child = transform.GetChild(i);
-                child.GetComponent<SpriteRenderer>().enabled = true;
+                var img = child.GetComponent<Image>();
+                if (img) {
+                    img.enabled = true;
+                }
+                else {
+                    child.GetComponent<SpriteRenderer>().enabled = true;
+                }
             }
         }
     }
 
     public void Hide() {
+        if (!revealing) return;
         revealing = false;
         t = 0;
 
         for (int i = 0; i < transform.childCount; i++) {
-            transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
+            var img = transform.GetChild(i).GetComponent<Image>();
+            if (img) {
+                img.enabled = true;
+            }
+            else {
+                transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
+            }
         }
     }
 

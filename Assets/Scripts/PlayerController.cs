@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -257,8 +258,11 @@ public class PlayerController : MonoBehaviour {
 
             }
             else if (box.transform.position.y - box.Location.y > FallingBlockWalkGap && box.Location.y == Location.y) {
-                moving = true;
-                Location = pos;
+                var below = grid.GetGridObject(pos.Offset(Vector2Int.down));
+                if (!below || !below.Falling) {
+                    moving = true;
+                    Location = pos;
+                }
             }
         }
 
@@ -325,19 +329,70 @@ public class PlayerController : MonoBehaviour {
     public float SummaryPanelMoveAmount;
     bool coinCollectedThisFrame = false;
 
+    public Counter CoinCounterNumber;
+    public Counter CoinScoreCounter;
+    public Counter TimeCounter;
+    public Counter TimeScoreCounter;
+    public Counter TotalScore;
+    public Reveal SummaryPressAny;
+
+    float secondsTaken = 0;
+    int score = 0;
+
+    IEnumerator ScoreCard() {
+        CoinCounterNumber.SetAmount(coinCount);
+        int coinScore = coinCount * 100;
+        if (coinScore <= 0) coinScore = 1;
+        CoinScoreCounter.SetAmount(coinScore);
+        yield return new WaitUntil(() => CoinCounterNumber.Done);
+
+        TimeCounter.SetAmount((int)secondsTaken);
+        int timerScore = 5400 - (int)secondsTaken * 30;
+        if (timerScore <= 0) timerScore = 1;
+        TimeScoreCounter.SetAmount(timerScore);
+        
+        yield return new WaitUntil(() => TimeScoreCounter.Done && TimeCounter.Done);
+        
+        var beforeScore = score;
+        score += coinScore + timerScore;
+        TotalScore.SetAmount(score, beforeScore);
+
+        yield return new WaitUntil(() => TotalScore.Done);
+        SummaryPressAny.StartReveal();
+
+        yield return new WaitUntil(() => Input.anyKey);
+        victory = false;
+        GridManager.Instance.Clear();
+        nextBottom = LevelGenerator.Instance.Generate(Location.y - 15) - 15;
+    }
+
+    bool counting;
+
     void Update() {
+        if (!victory) {
+            secondsTaken += Time.deltaTime;
+            counting = false;
+            SummaryPressAny.Hide();
+        }
+
         coinCollectedThisFrame = false;
         if (victory) {
             summaryT = Mathf.Clamp01(summaryT + Time.deltaTime * SummaryScreenSwapSpeed);
-            
-            if (summaryT == 1 && Input.anyKey) {
-                victory = false;
-                GridManager.Instance.Clear();
-                nextBottom = LevelGenerator.Instance.Generate(Location.y - 15) - 15;
+            if (summaryT == 1 && !counting) {
+                counting = true;
+                StartCoroutine(ScoreCard());
             }
         }
         else {
             summaryT = Mathf.Clamp01(summaryT - Time.deltaTime * SummaryScreenSwapSpeed);
+            if (summaryT == 0) {
+                CoinCounterNumber.Reset();
+                CoinScoreCounter.Reset();
+                TimeCounter.Reset();
+                TimeScoreCounter.Reset();
+                TotalScore.Reset();
+                TotalScore.UpdateNumbers(score);
+            }
         }
         float a = -summaryT * summaryT + 2 * summaryT;
 
@@ -412,6 +467,7 @@ public class PlayerController : MonoBehaviour {
         falling = false;
         dead = false;
         landing = false;
+        secondsTaken = 0;
         
         nextBottom = LevelGenerator.Instance.Generate(0);
     }
