@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridObject : MonoBehaviour {
@@ -32,6 +33,8 @@ public class GridObject : MonoBehaviour {
     public Vector2Int Right => Location.Offset(Vector2Int.right);
     public Vector2Int Up => Location.Offset(Vector2Int.up);
 
+    List<SpriteRenderer> breaks = new List<SpriteRenderer>();
+
     void Start() {
         if (BlockColor == BlockColor.None) {
             BlockColor = (BlockColor)Random.Range(0, (int)BlockColor.NonDrillable);
@@ -42,10 +45,60 @@ public class GridObject : MonoBehaviour {
         if (!GridManager.Instance.AddGridObject(Location, this)) {
             Destroy(this.gameObject);
         }
+
+        if (transform.childCount > 0) {
+            for (int i = 0 ; i < 4; i++) {
+                breaks.Add(transform.GetChild(i).GetComponent<SpriteRenderer>());
+            }
+        }
     }
 
     void OnDestroy() {
         GridManager.Instance.RemoveGridObject(this);
+    }
+
+    public void Break() {
+        if (HasParticles) {
+            var breakBlock = Instantiate(BreakBlockPrefab, transform.position, Quaternion.identity);
+            breakBlock.BlockColor = BlockColor;
+            breakBlock.Setup();
+        }
+        Destroy(gameObject);
+    }
+
+    public Sprite[] BreakSprites;
+
+    bool updatedThisFrame;
+
+    void Update() {
+        if (!updatedThisFrame && breaks.Count > 0) {
+            for (int i = 0; i < 4; i++){
+                breaks[i].enabled = false;
+            }
+        }
+    }
+
+    public void UpdateBreakTexture(Vector2Int direction, float amount) {
+        if (breaks.Count == 0) return;
+        updatedThisFrame = true;
+        int a = (int)Mathf.Clamp(amount / 0.2f, 0, 3);
+
+        if (direction == Vector2Int.down) {
+            breaks[0].enabled = true;
+            breaks[0].sprite = BreakSprites[a];
+        }
+        if (direction == Vector2Int.right) {
+            breaks[2].enabled = true;
+            breaks[2].sprite = BreakSprites[a + 4];
+        }
+        if (direction == Vector2Int.left) {
+            breaks[1].enabled = true;
+            breaks[1].sprite = BreakSprites[a + 8];
+        }
+        if (direction == Vector2Int.up) {
+            breaks[3].enabled = true;
+            breaks[3].sprite = BreakSprites[a + 12];
+        }
     }
 
     public void Drill() {

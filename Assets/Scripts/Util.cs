@@ -89,4 +89,9 @@ public static class Util {
 
     public static Vector2Int Offset(this Vector2Int v, Vector2Int o) => new Vector2Int(v.x + o.x, v.y + o.y);
     
+    public static float Bias(float value, float amount) {
+        float k = (1 - amount) * (1 - amount) * (1 - amount);
+        return (value * k) / (value * k - value + 1);
+    }
+
 }

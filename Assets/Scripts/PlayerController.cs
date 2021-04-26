@@ -179,9 +179,10 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (drilling) {
-            
-            // Drill cancel
             var delta = drillingBlock.Location - Location;
+            drillingBlock.UpdateBreakTexture(delta, timer / drillTime);
+
+            // Drill cancel
             var input = new Vector2Int();
             var h = Input.GetAxisRaw("Horizontal");
             var v = Input.GetAxisRaw("Vertical");
@@ -364,6 +365,10 @@ public class PlayerController : MonoBehaviour {
         victory = false;
         GridManager.Instance.Clear();
         nextBottom = LevelGenerator.Instance.Generate(Location.y - 15) - 15;
+        SummaryPressAny.Hide(); // Doesn't fucking work apparently
+
+        secondsTaken = 0;
+        SetCoinCount(0);
     }
 
     bool counting;
@@ -372,7 +377,6 @@ public class PlayerController : MonoBehaviour {
         if (!victory) {
             secondsTaken += Time.deltaTime;
             counting = false;
-            SummaryPressAny.Hide();
         }
 
         coinCollectedThisFrame = false;

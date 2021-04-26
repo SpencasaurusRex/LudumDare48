@@ -7748,22 +7748,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BlockPrefabs:
-  - {fileID: 1681800874, guid: 61cca113721af2d4ca06d27570c345a1, type: 3}
-  - {fileID: 1681800874, guid: 65d6b647f2f47fc49aecaa1b7161abdc, type: 3}
-  - {fileID: 1681800874, guid: f683bf399be14d84dab11ca565513bb2, type: 3}
   - {fileID: 1681800874, guid: 0856466ffb0bfd546a0acbc5fdb0f6df, type: 3}
-  - {fileID: 1681800874, guid: eef3c38d0646fbb4fae1332c824bba82, type: 3}
+  - {fileID: 1681800874, guid: 65d6b647f2f47fc49aecaa1b7161abdc, type: 3}
+  - {fileID: 1681800874, guid: 61cca113721af2d4ca06d27570c345a1, type: 3}
   - {fileID: 1681800874, guid: 1fbe2168f08899f4d90c8c5a0575061a, type: 3}
+  - {fileID: 1681800874, guid: f683bf399be14d84dab11ca565513bb2, type: 3}
+  - {fileID: 1681800874, guid: eef3c38d0646fbb4fae1332c824bba82, type: 3}
   NonDrillableBlockPrefab: {fileID: 1681800874, guid: 01a53c5ae3c582544adcd1648a31f198, type: 3}
   JarPrefab: {fileID: 1681800874, guid: d49156bc6b66d104895ea6cdb2ae4781, type: 3}
   CratePrefab: {fileID: 1681800874, guid: 23225a8d4ecf4864ca4fa6e3ff0ff6a9, type: 3}
   BackgroundGrid: {fileID: 8937139259642038556, guid: 3fd9ebc92addab54d9f92bb5bcac3565, type: 3}
   Width: 9
-  Height: 10
+  Height: 50
   MaxNonDrillablePerRow: 2
   NonDrillableChance: 0.02
   CrateChance: 0.015
   JarChance: 0.005
+  Bias: 0.3
   StartingDifficulty: 3
 --- !u!1 &1201634703
 GameObject:
@@ -10185,7 +10186,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 328, y: -2}
+  m_AnchoredPosition: {x: 328, y: 31}
   m_SizeDelta: {x: 310, y: 305}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1728956457

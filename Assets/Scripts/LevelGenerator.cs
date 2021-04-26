@@ -17,6 +17,7 @@ public class LevelGenerator : MonoBehaviour
     public float NonDrillableChance = .1f;
     public float CrateChance = .03f;
     public float JarChance = .01f;
+    public float Bias = 0.2f;
 
     // Runtime
     public int StartingDifficulty = 3;
@@ -51,7 +52,8 @@ public class LevelGenerator : MonoBehaviour
         for (int y = 0; y > -Height; y--) {
             int nonDrillableThisRow = 0;
             for (int x = 0; x < Width; x++) {
-                int i = Random.Range(0, Mathf.Clamp((int)Difficulty, 0, 5) + 1);
+                float r = Util.Bias(Random.Range(0, 1f), Bias);
+                int i = Mathf.Clamp((int)(r * Difficulty), 0, 5);
                 var pos = new Vector3(x, y + atY, 0);
                 
                 GridObject box;
@@ -73,7 +75,7 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
-        Difficulty += 0.75f;
+        Difficulty += 1f;
         return -Height + atY;
     }
 }
