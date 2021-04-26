@@ -23,7 +23,9 @@ public class BreakingParticlesSource : MonoBehaviour
                 var pos = transform.position + Vector3.up * Random.Range(-YVariation, YVariation);
 
                 var life = Instantiate(BreakingParticlesPrefab, pos, Quaternion.identity);
-                life.GetComponent<SpriteRenderer>().sprite = BreakingParticlesSprites[(int)BlockColor];
+                var sr = life.GetComponent<SpriteRenderer>();
+                sr.sprite = BreakingParticlesSprites[(int)BlockColor];
+                sr.sortingOrder = Random.Range(0, 1f) < 0.5f ? 3 : 0;
                 
                 float o = 1f;
                 Vector2 offset = new Vector2(Random.Range(-o, o), Random.Range(-o, o));
