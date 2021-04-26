@@ -7,12 +7,16 @@ public class LevelGenerator : MonoBehaviour
     // Configuration
     public GridObject[] BlockPrefabs;
     public GridObject NonDrillableBlockPrefab;
+    public GridObject JarPrefab;
+    public GridObject CratePrefab;
     public Transform BackgroundGrid;
 
     public int Width = 9;
     public int Height = 30;
     public int MaxNonDrillablePerRow = 2;
     public float NonDrillableChance = .1f;
+    public float CrateChance = .03f;
+    public float JarChance = .01f;
 
     // Runtime
     public int StartingDifficulty = 3;
@@ -54,6 +58,12 @@ public class LevelGenerator : MonoBehaviour
                 if (Random.Range(0f, 1f) <= NonDrillableChance + Difficulty / 50f && nonDrillableThisRow < MaxNonDrillablePerRow) {
                     nonDrillableThisRow++;
                     box = Instantiate(NonDrillableBlockPrefab, pos, Quaternion.identity);
+                }
+                else if (Random.Range(0f, 1f) <= CrateChance) {
+                    box = Instantiate(CratePrefab, pos, Quaternion.identity);
+                }
+                else if (Random.Range(0f, 1f) <= JarChance) {
+                    box = Instantiate(JarPrefab, pos, Quaternion.identity);
                 }
                 else {
                     box = Instantiate(BlockPrefabs[i], pos, Quaternion.identity);

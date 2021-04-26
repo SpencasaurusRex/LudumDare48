@@ -11,6 +11,9 @@ public class GridObject : MonoBehaviour {
     public float DrillTime;
     public Rigidbody2D CoinPrefab;
     public float CoinAmount;
+    public int CoinAmountFlucuate;
+    public bool CanConnect;
+    public bool HasParticles = true;
 
     // Runtime
     public bool Falling;
@@ -52,20 +55,24 @@ public class GridObject : MonoBehaviour {
         else Instantiate(GridManager.Instance.BlockBreakSound);
         foreach (var other in Group.Items) {
             other.GetComponent<Collider2D>().enabled = false;
-            var breakBlock = Instantiate(BreakBlockPrefab, other.Location.ToFloat(), Quaternion.identity);
-            breakBlock.BlockColor = other.BlockColor;
-            breakBlock.Setup();
-            if (other.BlockColor != BlockColor.NonDrillable) {
-                if (other.CoinAmount < 1) {
-                    if (Random.Range(0, 1f) < other.CoinAmount)
-                        Instantiate(CoinPrefab, other.Location.ToFloat(), Quaternion.identity);
-                }
-                else {
-                    for (int i = 0; i < other.CoinAmount; i++) {
-                        Instantiate(CoinPrefab, other.Location.ToFloat(), Quaternion.identity);
-                    }
+            
+            if (other.HasParticles) {
+                var breakBlock = Instantiate(BreakBlockPrefab, other.Location.ToFloat(), Quaternion.identity);
+                breakBlock.BlockColor = other.BlockColor;
+                breakBlock.Setup();
+            }
+            
+            if (other.CoinAmount < 1) {
+                if (Random.Range(0, 1f) < other.CoinAmount)
+                    Instantiate(CoinPrefab, other.Location.ToFloat(), Quaternion.identity);
+            }
+            else {
+                int change = Random.Range(-CoinAmountFlucuate, CoinAmountFlucuate);
+                for (int i = 0; i < other.CoinAmount + change; i++) {
+                    Instantiate(CoinPrefab, other.Location.ToFloat(), Quaternion.identity);
                 }
             }
+            
             Destroy(other.gameObject);
         }
     }

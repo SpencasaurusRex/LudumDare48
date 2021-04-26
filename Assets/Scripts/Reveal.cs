@@ -10,7 +10,8 @@ public class Reveal : MonoBehaviour
         if (revealing) {
             t += Time.deltaTime * Speed;
             for (int i = 0; i < t && i < transform.childCount; i++) {
-                transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = true;
+                var child = transform.GetChild(i);
+                child.GetComponent<SpriteRenderer>().enabled = true;
             }
         }
     }

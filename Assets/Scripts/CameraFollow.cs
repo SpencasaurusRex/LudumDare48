@@ -8,11 +8,12 @@ public class CameraFollow : MonoBehaviour
     public float RightLimit;
 
     public bool MatchY = true;
-
+    PlayerController player;
     Camera cam;
 
     void Start() {
         cam = GetComponent<Camera>();
+        player = FindObjectOfType<PlayerController>();
     }
 
     void LateUpdate() {
@@ -26,7 +27,9 @@ public class CameraFollow : MonoBehaviour
             }
 
             transform.position = Vector3.Lerp(transform.position, Follow.position.WithZ(transform.position.z), LerpStrength);
-            transform.position = transform.position.WithX(Mathf.Clamp(transform.position.x, leftMost, rightMost)); 
+            if (!player.dead) {
+                transform.position = transform.position.WithX(Mathf.Clamp(transform.position.x, leftMost, rightMost)); 
+            }
 
             if (MatchY) {
                 transform.position = transform.position.WithY(Follow.position.y);

@@ -61,7 +61,7 @@ public class GridManager : MonoBehaviour {
 
     void Connected(GridObject go) {
         if (go == null) return;
-        if (go.Wobbling || go.Falling) return;
+        if (!go.CanConnect || go.Wobbling || go.Falling) return;
         int combo = (int)go.BlockColor * 16;
         for (int i = 0; i < 4; i++) {
             var neighborPos = go.Location.Offset(dirs[i]);

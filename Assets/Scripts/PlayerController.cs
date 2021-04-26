@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour {
     public Sound DeathSoundPrefab;
     public AudioSource MusicSource;
     public AudioSource GameOverSoundPrefab;
+    public SpriteRenderer DrillOver;
     public float MusicFadeSpeed;
     float startingVolumeMusic;
 
@@ -232,12 +233,15 @@ public class PlayerController : MonoBehaviour {
                 drillTime = grid.GetGridObject(pos).DrillTime;
                 drilling = true;
                 drillingBlock = box;
-                lastSource = Instantiate(BreakingParticlesSourcePrefab, (transform.position + pos.WithZ(0).ToFloat()) * 0.5f, Quaternion.identity); 
-                var force = 2 * (transform.position - pos.WithZ(0).ToFloat());
-                var source = lastSource.GetComponent<BreakingParticlesSource>();
-                source.Force = force; 
-                source.BlockColor = box.BlockColor;
-                source.GetComponent<Lifetime>().Amount = drillTime;
+                
+                if (box.HasParticles) {
+                    lastSource = Instantiate(BreakingParticlesSourcePrefab, (transform.position + pos.WithZ(0).ToFloat()) * 0.5f, Quaternion.identity); 
+                    var force = 2 * (transform.position - pos.WithZ(0).ToFloat());
+                    var source = lastSource.GetComponent<BreakingParticlesSource>();
+                    source.Force = force; 
+                    source.BlockColor = box.BlockColor;
+                    source.GetComponent<Lifetime>().Amount = drillTime;
+                }
 
                 var delta = pos - Location;
                 if (delta.y < 0) {
@@ -310,6 +314,7 @@ public class PlayerController : MonoBehaviour {
 
     void Update() {
         if (dead) {
+            source.Stop();
             musicT = Mathf.Clamp01(musicT - Time.deltaTime * MusicFadeSpeed);
             MusicSource.volume = musicT * startingVolumeMusic;
         }
@@ -337,8 +342,10 @@ public class PlayerController : MonoBehaviour {
         }
         if (!dead) {
             deadTimer = Mathf.Clamp01(deadTimer - Time.deltaTime * DeathFadeSpeed);
+            DrillOver.color = new Color(DrillOver.color.r, DrillOver.color.g, DrillOver.color.b, 0);
             if (deadTimer < .001f) {
                 blackoutPanel.sortingOrder = 1;
+                DrillOver.sortingOrder = 2;
             }
             GridMovement();
         }
@@ -353,6 +360,8 @@ public class PlayerController : MonoBehaviour {
                 PressAnyText.Hide();
                 ResetLevel();
             }
+            
+            DrillOver.color = new Color(DrillOver.color.r, DrillOver.color.g, DrillOver.color.b, deadTimer);
         }
         blackoutPanel.color = new Color(blackoutPanel.color.r, blackoutPanel.color.g, blackoutPanel.color.b, deadTimer);
     }
@@ -363,6 +372,7 @@ public class PlayerController : MonoBehaviour {
         MusicSource.Play();
         LevelGenerator.Instance.Reset();
         blackoutPanel.sortingOrder = 3;
+        DrillOver.sortingOrder = 3;
         GridManager.Instance.Clear();
         Location = new Vector2Int(4, 1);
         transform.position = Location.ToFloat();

@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 8816002635437806341}
   - component: {fileID: 8816002635437806340}
   - component: {fileID: 1681800874}
-  - component: {fileID: 1167055640032818134}
+  - component: {fileID: -6498264959686928389}
   m_Layer: 0
-  m_Name: PinkBlock
+  m_Name: Jar
   m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -6835628450667530536, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}
+  m_Sprite: {fileID: 442938265271190401, guid: 2abc207ad916fce41b397d242ec1cfff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d4b3ab62700fc44aaf12fca7fbf7544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlockColor: 3
+  BlockColor: 6
   FallingSpeed: 5
   CanFall: 1
   WobbleCurve:
@@ -188,11 +188,12 @@ MonoBehaviour:
     m_RotationOrder: 4
   WobbleAnimationLength: 0.5
   BreakBlockPrefab: {fileID: 8385381582130519401, guid: 1f164a68349b96446839fb9dd5975c88, type: 3}
-  DrillTime: 0.5
+  DrillTime: 1
   CoinPrefab: {fileID: 5251960844801285811, guid: 84a420926a1bfc64b81cd5f5735d4f0e, type: 3}
-  CoinAmount: 0.5
-  CoinAmountFlucuate: 0
-  CanConnect: 1
+  CoinAmount: 12
+  CoinAmountFlucuate: 2
+  CanConnect: 0
+  HasParticles: 0
   Falling: 0
   Stable: 0
   Wobbling: 0
@@ -200,7 +201,7 @@ MonoBehaviour:
   JustFinishedFalling: 0
   TimeWobbling: 0
   Location: {x: 0, y: 0}
---- !u!61 &1167055640032818134
+--- !u!61 &-6498264959686928389
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
