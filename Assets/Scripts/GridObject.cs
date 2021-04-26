@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class GridObject : MonoBehaviour {
     // Configuration
-    public bool Drillable = true;
     public BlockColor BlockColor;
     public Sprite[] Sprites;
     public float FallingSpeed = 8;
@@ -10,6 +9,7 @@ public class GridObject : MonoBehaviour {
     public AnimationCurve WobbleCurve;
     public float WobbleAnimationLength = 0.5f;
     public BreakBlock BreakBlockPrefab;
+    public float DrillTime;
 
     // Runtime
     public bool Falling;
@@ -45,8 +45,6 @@ public class GridObject : MonoBehaviour {
     }
 
     public void Drill() {
-        if (!Drillable) return;
-
         foreach (var other in Group.Items) {
             other.GetComponent<Collider2D>().enabled = false;
             var breakBlock = Instantiate(BreakBlockPrefab, other.Location.ToFloat(), Quaternion.identity);

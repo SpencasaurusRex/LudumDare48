@@ -96,7 +96,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d4b3ab62700fc44aaf12fca7fbf7544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Drillable: 1
   BlockColor: 0
   Sprites:
   - {fileID: 4677932604682492237, guid: 13cf81d5438e7df488b38e69f6934278, type: 3}
@@ -286,6 +285,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   WobbleAnimationLength: 0.5
   BreakBlockPrefab: {fileID: 8385381582130519401, guid: 1f164a68349b96446839fb9dd5975c88, type: 3}
+  DrillTime: 0.5
   Falling: 0
   Stable: 0
   Wobbling: 0
