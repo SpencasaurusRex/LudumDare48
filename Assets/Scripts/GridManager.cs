@@ -133,7 +133,7 @@ public class GridManager : MonoBehaviour {
             toProcess.Enqueue(seed);
         }
 
-        while(toProcess.Any()) {
+        while(toProcess.Count > 0) {
             var processing = toProcess.Dequeue();
             if (checkedCoords.Contains(processing.Location)) continue;
             if (processing.Falling || processing.Wobbling) continue;

@@ -343,9 +343,10 @@ public class PlayerController : MonoBehaviour {
     float lastCoinCreated = 0;
     int coinCount;
     void CollectCoin() {
-        if (lastCoinCreated >= 0.1f) {
+        if (lastCoinCreated >= 0.05f) {
             lastCoinCreated = 0;
             var sound = Instantiate(SoundPrefab);
+            sound.Pitch = Random.Range(.9f, 1.1f);
         }
         
         coinCount++;
