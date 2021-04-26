@@ -14,6 +14,10 @@ public class PlayerController : MonoBehaviour {
     public GameObject BreakingParticlesSourcePrefab;
     public float LandingTime = 0.2f;
     public Image[] CreditImages;
+    
+    public Sprite[] UINUmbers;
+    public Image[] CoinNumbers;
+
     public Sound CoinSoundPrefab;
     public Sound DeathSoundPrefab;
     public AudioSource MusicSource;
@@ -354,6 +358,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void ResetLevel() {
+        SetCoinCount(0);
         MusicSource.volume = startingVolumeMusic;
         MusicSource.Play();
         LevelGenerator.Instance.Reset();
@@ -382,7 +387,17 @@ public class PlayerController : MonoBehaviour {
             sound.Pitch = Random.Range(.9f, 1.1f);
         }
         
-        coinCount++;
+        SetCoinCount(coinCount+1);
+    }
+
+    void SetCoinCount(int newCoinCount) {
+        coinCount = Mathf.Clamp(newCoinCount, 0, 999);
+        int h = coinCount / 100;
+        int t = (coinCount / 10) % 10;
+        int u = coinCount % 10;
+        CoinNumbers[0].sprite = UINUmbers[h];
+        CoinNumbers[1].sprite = UINUmbers[t];
+        CoinNumbers[2].sprite = UINUmbers[u];
     }
 
     void OnCollisionEnter2D(Collision2D other) {
