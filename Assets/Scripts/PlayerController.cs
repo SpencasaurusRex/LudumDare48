@@ -14,11 +14,30 @@ public class PlayerController : MonoBehaviour {
     public GameObject BreakingParticlesSourcePrefab;
     public float LandingTime = 0.2f;
     public Image[] CreditImages;
-    public Sound SoundPrefab;
+    public Sound CoinSoundPrefab;
+    public Sound DeathSoundPrefab;
+    public AudioSource MusicSource;
+    public AudioSource GameOverSoundPrefab;
+    public float MusicFadeSpeed;
+    float startingVolumeMusic;
 
     // Runtime
     public bool grounded = false;
-    public bool drilling = false;
+    
+    bool _drilling;
+    public bool drilling {
+        get => _drilling;
+        set {
+            if (_drilling != value) {
+                _drilling = value;
+                if (value)
+                    source.Play();
+                else source.Stop();
+            }
+        }
+    }
+    // public bool drilling = false;
+    
     float drillTime;
     public bool moving = false;
     public bool falling = false;
@@ -30,6 +49,7 @@ public class PlayerController : MonoBehaviour {
     int nextBottom;
     SpriteRenderer blackoutPanel;
     Reveal PressAnyText;
+    AudioSource source;
 
     Animator animator;
     GridObject drillingBlock;
@@ -46,8 +66,11 @@ public class PlayerController : MonoBehaviour {
     public Vector2Int Up => Location.Offset(Vector2Int.up);
 
     GameObject lastSource;
+    float musicT;
 
     void Start() {
+        startingVolumeMusic = MusicSource.volume;
+        source = GetComponent<AudioSource>();
         grid = GridManager.Instance;
         Location = transform.position.xy().RoundToInt();
         transform.position = Location.ToFloat();
@@ -120,6 +143,8 @@ public class PlayerController : MonoBehaviour {
             }
             if (y < FallingBlockKillGap) {
                 dead = true;
+                Instantiate(DeathSoundPrefab);
+                Instantiate(GameOverSoundPrefab);
                 SetState(State.Dead);
                 return;
             }
@@ -264,7 +289,7 @@ public class PlayerController : MonoBehaviour {
             SetState(State.Walking);
         }
         else if (drilling) {
-             
+            
         }
         else if (landing) {
 
@@ -280,6 +305,12 @@ public class PlayerController : MonoBehaviour {
     CameraFollow cameraFollow;
 
     void Update() {
+        if (dead) {
+            musicT = Mathf.Clamp01(musicT - Time.deltaTime * MusicFadeSpeed);
+            MusicSource.volume = musicT * startingVolumeMusic;
+        }
+        // else musicT = Mathf.Clamp01(musicT + Time.deltaTime * MusicFadeSpeed);
+
         lastCoinCreated += Time.deltaTime;
 
         if (start) {
@@ -323,6 +354,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void ResetLevel() {
+        MusicSource.volume = startingVolumeMusic;
+        MusicSource.Play();
         LevelGenerator.Instance.Reset();
         blackoutPanel.sortingOrder = 3;
         GridManager.Instance.Clear();
@@ -345,7 +378,7 @@ public class PlayerController : MonoBehaviour {
     void CollectCoin() {
         if (lastCoinCreated >= 0.05f) {
             lastCoinCreated = 0;
-            var sound = Instantiate(SoundPrefab);
+            var sound = Instantiate(CoinSoundPrefab);
             sound.Pitch = Random.Range(.9f, 1.1f);
         }
         

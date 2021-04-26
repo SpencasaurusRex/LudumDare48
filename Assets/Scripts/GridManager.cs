@@ -5,7 +5,9 @@ using UnityEngine;
 public class GridManager : MonoBehaviour {
     // Configuration
     public Sprite[] Sprites;
-    
+    public Sound BlockBreakSound;
+    public Sound MetalBlockBreakSound;
+
     // Runtime
     public Dictionary<Vector2Int, GridObject> Grid = new Dictionary<Vector2Int, GridObject>();
     List<GridObject> GridObjects = new List<GridObject>();

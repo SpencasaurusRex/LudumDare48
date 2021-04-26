@@ -46,6 +46,10 @@ public class GridObject : MonoBehaviour {
     }
 
     public void Drill() {
+        if (BlockColor == BlockColor.NonDrillable) {
+            Instantiate(GridManager.Instance.MetalBlockBreakSound);
+        }
+        else Instantiate(GridManager.Instance.BlockBreakSound);
         foreach (var other in Group.Items) {
             other.GetComponent<Collider2D>().enabled = false;
             var breakBlock = Instantiate(BreakBlockPrefab, other.Location.ToFloat(), Quaternion.identity);
