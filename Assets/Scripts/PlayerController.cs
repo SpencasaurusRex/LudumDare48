@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour {
     public Sprite[] UINUmbers;
     public Image[] CoinNumbers;
 
+    public RectTransform SummaryScreen;
+    public RectTransform CoinCounter;
     public Sound CoinSoundPrefab;
     public Sound DeathSoundPrefab;
     public AudioSource MusicSource;
@@ -41,7 +43,6 @@ public class PlayerController : MonoBehaviour {
             }
         }
     }
-    // public bool drilling = false;
     
     float drillTime;
     public bool moving = false;
@@ -74,6 +75,8 @@ public class PlayerController : MonoBehaviour {
     float musicT;
 
     void Start() {
+        defaultCoinCounterPos = CoinCounter.anchoredPosition;
+        defaultSummaryPanelPos = SummaryScreen.anchoredPosition;
         startingVolumeMusic = MusicSource.volume;
         source = GetComponent<AudioSource>();
         grid = GridManager.Instance;
@@ -131,7 +134,6 @@ public class PlayerController : MonoBehaviour {
                     SetState(State.Landing);
                 }
                 else {
-                    // grid.MoveGridObject(gridObject, nextGridPos);
                     Location = nextGridPos;
                     nextFallCheck--;
                 }
@@ -148,6 +150,7 @@ public class PlayerController : MonoBehaviour {
             }
             if (y < FallingBlockKillGap) {
                 dead = true;
+                source.Stop();
                 Instantiate(DeathSoundPrefab);
                 Instantiate(GameOverSoundPrefab);
                 SetState(State.Dead);
@@ -312,15 +315,40 @@ public class PlayerController : MonoBehaviour {
     bool cameraUnassigned = true;
     CameraFollow cameraFollow;
 
+    public float SummaryScreenSwapSpeed = 1;
+    float summaryT = 0;
+
+    Vector2 defaultCoinCounterPos;
+    Vector2 defaultSummaryPanelPos;
+
+    public float CoinCounterMoveAmount;
+    public float SummaryPanelMoveAmount;
+    bool coinCollectedThisFrame = false;
+
     void Update() {
+        coinCollectedThisFrame = false;
+        if (victory) {
+            summaryT = Mathf.Clamp01(summaryT + Time.deltaTime * SummaryScreenSwapSpeed);
+            
+            if (summaryT == 1 && Input.anyKey) {
+                victory = false;
+                GridManager.Instance.Clear();
+                nextBottom = LevelGenerator.Instance.Generate(Location.y - 15) - 15;
+            }
+        }
+        else {
+            summaryT = Mathf.Clamp01(summaryT - Time.deltaTime * SummaryScreenSwapSpeed);
+        }
+        float a = -summaryT * summaryT + 2 * summaryT;
+
+        SummaryScreen.anchoredPosition = Vector2.Lerp(defaultSummaryPanelPos, defaultSummaryPanelPos + new Vector2(SummaryPanelMoveAmount, 0), a);
+        CoinCounter.anchoredPosition = Vector2.Lerp(defaultCoinCounterPos, defaultCoinCounterPos + new Vector2(CoinCounterMoveAmount, 0), a);
+
         if (dead) {
             source.Stop();
             musicT = Mathf.Clamp01(musicT - Time.deltaTime * MusicFadeSpeed);
             MusicSource.volume = musicT * startingVolumeMusic;
         }
-        // else musicT = Mathf.Clamp01(musicT + Time.deltaTime * MusicFadeSpeed);
-
-        lastCoinCreated += Time.deltaTime;
 
         if (start) {
             if (Input.anyKey) {
@@ -388,11 +416,10 @@ public class PlayerController : MonoBehaviour {
         nextBottom = LevelGenerator.Instance.Generate(0);
     }
 
-    float lastCoinCreated = 0;
     int coinCount;
     void CollectCoin() {
-        if (lastCoinCreated >= 0.05f) {
-            lastCoinCreated = 0;
+        if (!coinCollectedThisFrame) {
+            coinCollectedThisFrame = true;
             var sound = Instantiate(CoinSoundPrefab);
             sound.Pitch = Random.Range(.9f, 1.1f);
         }
@@ -418,10 +445,5 @@ public class PlayerController : MonoBehaviour {
     public void Victory() {
         if (victory) return;
         victory = true;
-
-        // Load next level
-        victory = false;
-        GridManager.Instance.Clear();
-        nextBottom = LevelGenerator.Instance.Generate(Location.y - 15) - 10;
     }
 }

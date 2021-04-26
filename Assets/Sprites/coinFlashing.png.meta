@@ -139,7 +139,7 @@ TextureImporter:
       name: coinFlashing_1
       rect:
         serializedVersion: 2
-        x: 12
+        x: 13
         y: 0
         width: 12
         height: 14
@@ -160,7 +160,7 @@ TextureImporter:
       name: coinFlashing_2
       rect:
         serializedVersion: 2
-        x: 24
+        x: 26
         y: 0
         width: 12
         height: 14
@@ -181,7 +181,7 @@ TextureImporter:
       name: coinFlashing_3
       rect:
         serializedVersion: 2
-        x: 36
+        x: 39
         y: 0
         width: 12
         height: 14
