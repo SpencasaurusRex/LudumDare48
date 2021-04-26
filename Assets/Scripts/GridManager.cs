@@ -66,7 +66,7 @@ public class GridManager : MonoBehaviour {
         for (int i = 0; i < 4; i++) {
             var neighborPos = go.Location.Offset(dirs[i]);
             var neighbor = GridManager.Instance.GetGridObject(neighborPos);
-            if (neighbor != null && !neighbor.Falling && !neighbor.Wobbling && neighbor.BlockColor == go.BlockColor) {
+            if (neighbor != null && !neighbor.Falling && !neighbor.Wobbling && neighbor.BlockColor == go.BlockColor && neighbor.CanConnect) {
                 combo += 1 << i;
                 if (neighbor.Group != go.Group) {
                     go.Group.Add(neighbor);
