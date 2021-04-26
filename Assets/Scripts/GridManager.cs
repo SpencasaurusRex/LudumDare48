@@ -209,9 +209,17 @@ public class GridManager : MonoBehaviour {
     }
 
     public void Clear() {
+        var player = FindObjectOfType<PlayerController>();
+
         foreach (var obj in GridObjects) {
-            if (obj != null)
-                Destroy(obj.gameObject);
+            if (obj != null) {
+                if ((obj.transform.position - player.transform.position).magnitude < 10f) {
+                    obj.Break();
+                }
+                else {
+                    Destroy(obj.gameObject);
+                }
+            }
         }
         moves.Clear();
         GridObjects.Clear();

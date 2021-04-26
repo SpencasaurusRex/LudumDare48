@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d4b3ab62700fc44aaf12fca7fbf7544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlockColor: 3
+  BlockColor: 2
   FallingSpeed: 5
   CanFall: 1
   WobbleCurve:
@@ -193,6 +193,7 @@ MonoBehaviour:
   CoinAmount: 0.5
   CoinAmountFlucuate: 0
   CanConnect: 1
+  HasParticles: 1
   Falling: 0
   Stable: 0
   Wobbling: 0
