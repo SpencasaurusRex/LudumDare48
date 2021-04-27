@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cbb7c8f2f8a86046b0f1f210a00e072, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Clip: {fileID: 8300000, guid: 01d15f458bb40d34cbddc5786cdfc46f, type: 3}
+  Clip: {fileID: 8300000, guid: 95e9cec943aa3f44eaaf26512b693e0b, type: 3}
   Pitch: 1
   Volume: 0.2
 --- !u!82 &2549800405534491845

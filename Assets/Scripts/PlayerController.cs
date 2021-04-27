@@ -26,8 +26,10 @@ public class PlayerController : MonoBehaviour {
     public AudioSource MusicSource;
     public AudioSource GameOverSoundPrefab;
     public SpriteRenderer DrillOver;
+    public SpriteRenderer GrandTotal;
     public float MusicFadeSpeed;
     float startingVolumeMusic;
+    public SpriteCounter FinalScoreDeathCounter;
 
     // Runtime
     public bool grounded = false;
@@ -151,6 +153,7 @@ public class PlayerController : MonoBehaviour {
             }
             if (y < FallingBlockKillGap) {
                 dead = true;
+                FinalScoreDeathCounter.Show();
                 source.Stop();
                 Instantiate(DeathSoundPrefab);
                 Instantiate(GameOverSoundPrefab);
@@ -356,6 +359,11 @@ public class PlayerController : MonoBehaviour {
         
         var beforeScore = score;
         score += coinScore + timerScore;
+
+        // Set score on UI
+        FinalScoreDeathCounter.SetAmount(score);
+        FinalScoreDeathCounter.Show();
+
         TotalScore.SetAmount(score, beforeScore);
 
         yield return new WaitUntil(() => TotalScore.Done);
@@ -374,6 +382,7 @@ public class PlayerController : MonoBehaviour {
     bool counting;
 
     void Update() {
+
         if (!victory) {
             secondsTaken += Time.deltaTime;
             counting = false;
@@ -410,7 +419,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (start) {
-            if (Input.anyKey) {
+            if (Input.anyKeyDown) {
                 start = false;
                 transform.localScale = Vector3.one;
                 foreach (var image in CreditImages) {
@@ -428,11 +437,14 @@ public class PlayerController : MonoBehaviour {
             }
         }
         if (!dead) {
+            FinalScoreDeathCounter.Hide();
             deadTimer = Mathf.Clamp01(deadTimer - Time.deltaTime * DeathFadeSpeed);
             DrillOver.color = new Color(DrillOver.color.r, DrillOver.color.g, DrillOver.color.b, 0);
+            GrandTotal.color = new Color(GrandTotal.color.r, GrandTotal.color.g, GrandTotal.color.b, 0);
             if (deadTimer < .001f) {
                 blackoutPanel.sortingOrder = 1;
                 DrillOver.sortingOrder = 2;
+                GrandTotal.sortingOrder = 2;
             }
             GridMovement();
         }
@@ -449,6 +461,7 @@ public class PlayerController : MonoBehaviour {
             }
             
             DrillOver.color = new Color(DrillOver.color.r, DrillOver.color.g, DrillOver.color.b, deadTimer);
+            GrandTotal.color = new Color(GrandTotal.color.r, GrandTotal.color.g, GrandTotal.color.b, deadTimer);
         }
         blackoutPanel.color = new Color(blackoutPanel.color.r, blackoutPanel.color.g, blackoutPanel.color.b, deadTimer);
     }
@@ -460,6 +473,7 @@ public class PlayerController : MonoBehaviour {
         LevelGenerator.Instance.Reset();
         blackoutPanel.sortingOrder = 3;
         DrillOver.sortingOrder = 3;
+        GrandTotal.sortingOrder = 3;
         GridManager.Instance.Clear();
         Location = new Vector2Int(4, 1);
         transform.position = Location.ToFloat();

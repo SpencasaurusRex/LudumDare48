@@ -1,8 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class Counter : MonoBehaviour {
-    public Image[] Digits;
+public class SpriteCounter : MonoBehaviour {
+    public SpriteRenderer[] Digits;
     public Sprite[] Numbers;
     public float CountSpeed = 50;
 
@@ -17,7 +16,7 @@ public class Counter : MonoBehaviour {
     }
 
     void Start() {
-        Digits = GetComponentsInChildren<Image>();
+        Digits = GetComponentsInChildren<SpriteRenderer>();
         maxAmount = Mathf.RoundToInt(Mathf.Pow(10, Digits.Length)) - 1;
     }
 
@@ -47,7 +46,7 @@ public class Counter : MonoBehaviour {
 
     public void Show() {
         for (int i = 0; i < Digits.Length; i++) {
-            Digits[i].enabled = false;
+            Digits[i].enabled = true;
         }
     }
 
